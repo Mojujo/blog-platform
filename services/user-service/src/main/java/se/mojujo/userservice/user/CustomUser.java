@@ -16,12 +16,14 @@ public class CustomUser {
 
     @Column(unique = true, nullable = false)
     private String username;
+
     private String email;
     private String password;
-    private boolean isAccountNonExpired;
-    private boolean isAccountNonLocked;
-    private boolean isCredentialsNonExpired;
-    private boolean isEnabled;
+
+    private boolean isAccountNonExpired = true;
+    private boolean isAccountNonLocked = true;
+    private boolean isCredentialsNonExpired = true;
+    private boolean isEnabled = true;
 
     @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
@@ -29,8 +31,17 @@ public class CustomUser {
     private Set<UserRole> roles;
 
     public CustomUser() {}
-    public CustomUser(UUID id, String username, String email, String password, boolean isAccountNonExpired, boolean isAccountNonLocked, boolean isCredentialsNonExpired, boolean isEnabled, Set<UserRole> roles) {
-        this.id = id;
+
+    // Generic constructor -- Booleans are true by default
+    public CustomUser(String username, String email, String password, Set<UserRole> roles) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+    }
+
+    // Full constructor if needed
+    public CustomUser(String username, String email, String password, boolean isAccountNonExpired, boolean isAccountNonLocked, boolean isCredentialsNonExpired, boolean isEnabled, Set<UserRole> roles) {
         this.username = username;
         this.email = email;
         this.password = password;
@@ -65,7 +76,6 @@ public class CustomUser {
         return password;
     }
 
-    // TODO HASHING
     public void setPassword(String password) {
         this.password = password;
     }

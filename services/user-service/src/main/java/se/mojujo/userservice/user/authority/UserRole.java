@@ -10,7 +10,9 @@ public enum UserRole {
 
     GUEST(
             UserRoleName.GUEST.getRoleName(),
-            Set.of() // 0 Permissions // READ permission could be available here!
+            Set.of(
+                    READ
+            )
     ),
 
     USER(
