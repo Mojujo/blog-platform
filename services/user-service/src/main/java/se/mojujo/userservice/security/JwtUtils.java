@@ -120,17 +120,19 @@ public class JwtUtils {
         return false;
     }
 
+    // Extract JWT from cookie
     String extractJwtFromCookie(HttpServletRequest request) {
-        if (request.getCookies() != null) return null;
+        if (request.getCookies() == null) return null;
 
         for (Cookie c : request.getCookies()) {
-            if ("auth".equals(c.getName())) {
+            if ("authToken".equals(c.getName())) {
                 return c.getValue();
             }
         }
         return null;
     }
 
+    // Extract JWT from header
     String extractJwtFromRequest(HttpServletRequest request) {
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (header != null && header.startsWith("Bearer ")) {
