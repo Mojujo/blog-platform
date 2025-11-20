@@ -25,6 +25,8 @@ public class CustomUserDetailsService implements UserDetailsService {
                         () -> new UsernameNotFoundException("User not found with username: " + username)
                 );
 
+        // TODO Mapping instead of pushing to entity
+
         return new CustomUserDetails(customUser);
     }
 }
