@@ -16,10 +16,7 @@ import se.mojujo.userservice.user.authority.UserRole;
 
 
 import javax.crypto.SecretKey;
-import java.util.Base64;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -43,13 +40,17 @@ public class JwtUtils {
     public String generateJwtToken(CustomUser customUser) { // TODO - CustomUserDetails
         logger.debug("Generating token for user: {} with roles {}", customUser.getUsername(), customUser.getRoles());
 
-        List<String> roles = customUser.getRoles().stream().map(
-                UserRole::getRoleName
-        ).toList();
+        List<String> authorities = customUser.getRoles().stream()
+                .flatMap(role -> {
+                    List<String> auths = new ArrayList<>();
+                    auths.add(role.getRoleName());
+                    role.getUserPermissions().forEach(permission -> auths.add(permission.getUserPermission()));
+                    return auths.stream();
+                }).toList();
 
         String token = Jwts.builder()
                 .subject(customUser.getUsername())
-                .claim("authorities", roles)
+                .claim("authorities", authorities)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .signWith(key)
