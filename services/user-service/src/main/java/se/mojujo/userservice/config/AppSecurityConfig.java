@@ -11,7 +11,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.web.cors.CorsConfigurationSource;
+import se.mojujo.userservice.security.CsrfCookieFilter;
 import se.mojujo.userservice.security.JwtAuthenticationFilter;
 import se.mojujo.userservice.user.authority.UserRole;
 
@@ -21,11 +24,13 @@ public class AppSecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CorsConfigurationSource corsConfigurationSource;
+    private final CsrfCookieFilter csrfCookieFilter;
 
     @Autowired
-    public AppSecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, CorsConfigurationSource corsConfigurationSource) {
+    public AppSecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, CorsConfigurationSource corsConfigurationSource, CsrfCookieFilter csrfCookieFilter) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.corsConfigurationSource = corsConfigurationSource;
+        this.csrfCookieFilter = csrfCookieFilter;
     }
 
     @Bean
@@ -34,11 +39,19 @@ public class AppSecurityConfig {
     }
 
     @Bean
+    public CsrfTokenRequestAttributeHandler csrfTokenRequestAttributeHandler() {
+        CsrfTokenRequestAttributeHandler handler = new CsrfTokenRequestAttributeHandler();
+        handler.setCsrfRequestAttributeName("_csrf");
+        return handler;
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 // CSRF Enabled, token stored in cookie
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .csrfTokenRequestHandler(csrfTokenRequestAttributeHandler())
                 )
 
                 // CORS
@@ -48,17 +61,18 @@ public class AppSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/register", "/login").permitAll()
                         .requestMatchers("/admin", "/tools").hasRole("ADMIN")
-                        .requestMatchers("/user").hasRole(UserRole.USER.name())
+                        .requestMatchers("/profile").hasRole(UserRole.USER.name())
                         .anyRequest().authenticated()
                 )
 
                 // Stateless session
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 )
 
-                // Add JWT Filter before UsernameAuthenticationFilter
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                // Add JWT Filter and CsrfCookieFilter before UsernameAuthenticationFilter
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(csrfCookieFilter, CsrfFilter.class);
 
         return httpSecurity.build();
     }
