@@ -16,7 +16,6 @@ import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.web.cors.CorsConfigurationSource;
 import se.mojujo.userservice.security.CsrfCookieFilter;
 import se.mojujo.userservice.security.JwtAuthenticationFilter;
-import se.mojujo.userservice.user.authority.UserRole;
 
 @Configuration
 @EnableWebSecurity
@@ -59,7 +58,7 @@ public class AppSecurityConfig {
 
                 // Route Authorization
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/register", "auth/**").permitAll()
+                        .requestMatchers("/", "/register", "/auth/**").permitAll()
                         .requestMatchers("/admin/**", "/tools").hasRole("ADMIN")
                         .requestMatchers("/profile").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
