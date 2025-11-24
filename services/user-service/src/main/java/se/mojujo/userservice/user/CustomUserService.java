@@ -1,5 +1,6 @@
 package se.mojujo.userservice.user;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ public class CustomUserService {
         this.customUserMapper = customUserMapper;
     }
 
+    @Transactional
     public CustomUserResponseDTO createUser(CustomUserCreationDTO dto) {
         if (customUserRepository.existsByUsername(dto.username())) {
             throw new UsernameAlreadyExistsException("Username already exists");
