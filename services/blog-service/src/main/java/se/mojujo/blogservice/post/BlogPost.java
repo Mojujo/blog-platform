@@ -15,7 +15,7 @@ public class BlogPost {
     private UUID id;
 
     @Column(nullable = false)
-    private UUID userId;
+    private UUID userId; // Logical service reference
     private String title;
 
     @Column(columnDefinition = "TEXT", nullable = false)
@@ -30,14 +30,23 @@ public class BlogPost {
 
     public BlogPost() {}
 
+    // Generic Constructor for Service & Mapper
+    public BlogPost(UUID userId, String title, String content, String imageUrl) {
+        this.userId = userId;
+        this.title = title;
+        this.content = content;
+        this.imageUrl = imageUrl;
+        this.createdDate = Instant.now();
+    }
+
     // Full Constructor if needed
-    public BlogPost(UUID userId, String title, String content, String imageUrl, Instant createdDate, Instant updatedAt) {
+    public BlogPost(UUID userId, String title, String content, String imageUrl, Instant createdDate, Instant updatedDate) {
         this.userId = userId;
         this.title = title;
         this.content = content;
         this.imageUrl = imageUrl;
         this.createdDate = createdDate;
-        this.updatedAt = updatedAt;
+        this.updatedAt = updatedDate;
     }
 
     public UUID getId() {
