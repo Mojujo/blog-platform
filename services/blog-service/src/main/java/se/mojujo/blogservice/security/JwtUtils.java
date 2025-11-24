@@ -107,7 +107,7 @@ public class JwtUtils {
                 .parseSignedClaims(token)
                 .getPayload();
 
-        List<String> roles = claims.get("roles", List.class);
+        List<String> roles = claims.get("authorities", List.class);
         if (roles == null) return Set.of();
         return new HashSet<>(roles); // Roles extracted as Strings
     }

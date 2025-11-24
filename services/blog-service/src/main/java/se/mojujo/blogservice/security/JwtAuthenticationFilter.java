@@ -44,6 +44,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
 
+        logger.info("Filter starting");
+
         // Extract token
         String token = jwtUtils.extractJwtFromCookie(request);
         if (token == null) {
@@ -68,6 +70,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 Set<GrantedAuthority> authorities = roles.stream()
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toSet());
+
+                logger.debug("Authorities found: {}", authorities);
 
                 AuthenticatedUserDetails authUser = new AuthenticatedUserDetails(userId, username, authorities);
 
