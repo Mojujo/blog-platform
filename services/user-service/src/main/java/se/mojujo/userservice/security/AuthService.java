@@ -2,6 +2,8 @@ package se.mojujo.userservice.security;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -11,11 +13,14 @@ import org.springframework.stereotype.Service;
 import se.mojujo.userservice.exception.InvalidCredentialsException;
 import se.mojujo.userservice.security.dto.AuthResponseDTO;
 import se.mojujo.userservice.user.CustomUserDetails;
+import se.mojujo.userservice.util.LogUtil;
 
 import java.util.List;
 
 @Service
 public class AuthService {
+
+    private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
@@ -26,6 +31,8 @@ public class AuthService {
     }
 
     public AuthResponseDTO login(String username, String password) {
+
+        LogUtil.info(logger, "LOGIN_ATTEMPT", null, "username", username);
 
         try {
             Authentication authentication = authenticationManager.authenticate(
@@ -43,19 +50,30 @@ public class AuthService {
                     .map(GrantedAuthority::getAuthority)
                     .toList();
 
+            LogUtil.info(logger,
+                    "LOGIN_SUCCESS",
+                    null,
+                    "username", username, "userId", customUserDetails.getCustomUser().getId());
+
             return new AuthResponseDTO(token, roles);
 
         } catch (AuthenticationException e) {
+            LogUtil.warn(logger, "LOGIN_FAILED", null, "username", username);
             throw new InvalidCredentialsException("Invalid username or password");
         }
     }
 
     public void logout(HttpServletResponse response) {
+
+        LogUtil.info(logger, "LOGOUT_ATTEMPT", null);
+
         Cookie authCookie = new Cookie("authToken", null);
         authCookie.setHttpOnly(true);
         authCookie.setSecure(false);
         authCookie.setPath("/");
         authCookie.setMaxAge(0);
         response.addCookie(authCookie);
+
+        LogUtil.info(logger, "LOGOUT_SUCCESS", null);
     }
 }

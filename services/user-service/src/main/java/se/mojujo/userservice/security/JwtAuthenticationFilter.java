@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import se.mojujo.userservice.util.LogUtil;
 
 import java.io.IOException;
 
@@ -39,7 +40,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
 
-        logger.debug(" JwtAuthenticationFilter Start ");
+        LogUtil.info(logger, "JWT_FILTER_START", null, "requestURI", request.getRequestURI());
 
         // Extract token
         String token = jwtUtils.extractJwtFromCookie(request);
@@ -48,12 +49,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         if (token == null) {
-            logger.debug("No JWT token found in request");
+            LogUtil.info(logger, "JWT_TOKEN_MISSING", "No JWT token found in request", "requestURI", request.getRequestURI());
             filterChain.doFilter(request, response);
             return;
         }
 
-        logger.debug("JWT token found: {}", token);
+        LogUtil.info(logger, "JWT_TOKEN_FOUND", null, "token", token, "requestURI", request.getRequestURI());
 
         //Validate token
         if (jwtUtils.validateJwtToken(token)) {
@@ -74,16 +75,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
 
-                    logger.debug("Authenticated (Database verified) user '{}'", username);
+                    LogUtil.info(logger, "JWT_AUTH_SUCCESS", null, "username", username, "requestURI", request.getRequestURI());
+
                 } else {
-                    logger.warn("User '{}' not found or disabled", username);
+                    LogUtil.warn(logger, "JWT_AUTH_USER_NOT_FOUND", null, "username", username, "requestURI", request.getRequestURI());
                 }
             }
         } else {
-            logger.warn("Invalid JWT token");
+            LogUtil.warn(logger, "JWT_AUTH_INVALID_TOKEN", null, "requestURI", request.getRequestURI());
         }
 
         filterChain.doFilter(request, response);
-        logger.debug(" JwtAuthenticationFilter End ");
+        LogUtil.info(logger, "JWT_FILTER_END", null, "requestURI", request.getRequestURI());
     }
 }
