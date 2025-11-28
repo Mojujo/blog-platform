@@ -51,6 +51,7 @@ public class JwtUtils {
 
         String token = Jwts.builder()
                 .subject(customUser.getUsername())
+                .claim("userId", customUser.getId().toString())
                 .claim("authorities", authorities)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
