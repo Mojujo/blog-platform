@@ -54,7 +54,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        LogUtil.info(logger, "JWT_TOKEN_FOUND", null, "token", token, "requestURI", request.getRequestURI());
+        LogUtil.info(logger, "JWT_TOKEN_FOUND", "JWT token detected in request", "token", LogUtil.maskToken(token), "requestURI", request.getRequestURI());
 
         //Validate token
         if (jwtUtils.validateJwtToken(token)) {
