@@ -1,6 +1,8 @@
 package se.mojujo.userservice.user;
 
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,9 +12,12 @@ import se.mojujo.userservice.repository.CustomUserRepository;
 import se.mojujo.userservice.user.dto.CustomUserCreationDTO;
 import se.mojujo.userservice.user.dto.CustomUserResponseDTO;
 import se.mojujo.userservice.user.mapper.CustomUserMapper;
+import se.mojujo.userservice.util.LogUtil;
 
 @Service
 public class CustomUserService {
+
+    private static final Logger logger = LoggerFactory.getLogger(CustomUserService.class);
 
     private final CustomUserRepository customUserRepository;
     private final PasswordEncoder passwordEncoder;
@@ -27,11 +32,16 @@ public class CustomUserService {
 
     @Transactional
     public CustomUserResponseDTO createUser(CustomUserCreationDTO dto) {
+
+        LogUtil.info(logger, "USER_CREATION_ATTEMPT", null, "username", dto.username());
+
         if (customUserRepository.existsByUsername(dto.username())) {
+            LogUtil.warn(logger, "USERNAME_EXISTS", null, "username", dto.username());
             throw new UsernameAlreadyExistsException("Username already exists");
         }
 
         if (customUserRepository.existsByEmail(dto.email())) {
+            LogUtil.warn(logger, "EMAIL_EXISTS", null, "email", dto.email());
             throw new EmailAlreadyExistsException("Email already exists");
         }
 
@@ -40,6 +50,11 @@ public class CustomUserService {
         user.setPassword(passwordEncoder.encode(dto.password()));
 
         CustomUser savedUser = customUserRepository.save(user);
+
+        LogUtil.info(logger,
+                "USER_CREATED",
+                "User created successfully",
+                "userId", savedUser.getId(), "username", savedUser.getUsername());
 
         return customUserMapper.toResponseDTO(savedUser);
     }

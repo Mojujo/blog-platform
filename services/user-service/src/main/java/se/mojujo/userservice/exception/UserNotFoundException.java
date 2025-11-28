@@ -1,7 +1,9 @@
 package se.mojujo.userservice.exception;
 
-public class UserNotFoundException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class UserNotFoundException extends ErrorResponseFormat {
     public UserNotFoundException(String message) {
-        super(message);
+        super(message, HttpStatus.NOT_FOUND, "User not found");
     }
 }

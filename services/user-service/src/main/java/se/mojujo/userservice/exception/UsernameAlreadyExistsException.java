@@ -1,7 +1,9 @@
 package se.mojujo.userservice.exception;
 
-public class UsernameAlreadyExistsException extends RuntimeException {
+import org.springframework.http.HttpStatus;
+
+public class UsernameAlreadyExistsException extends ErrorResponseFormat {
     public UsernameAlreadyExistsException(String message) {
-        super(message);
+        super(message, HttpStatus.CONFLICT, "Username already exists");
     }
 }

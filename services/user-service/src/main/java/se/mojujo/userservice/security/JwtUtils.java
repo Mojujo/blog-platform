@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.http.HttpHeaders;
 import se.mojujo.userservice.user.CustomUser;
 import se.mojujo.userservice.user.authority.UserRole;
+import se.mojujo.userservice.util.LogUtil;
 
 
 import javax.crypto.SecretKey;
@@ -33,12 +34,12 @@ public class JwtUtils {
     public void init() {
         byte[] decodedKey = Base64.getDecoder().decode(base64Secret);
         this.key = Keys.hmacShaKeyFor(decodedKey);
+        LogUtil.info(logger, "JWT_INIT", "JWT secret key initialized successfully");
     }
 
     private final int jwtExpirationMs = (int) TimeUnit.HOURS.toMillis(1);
 
     public String generateJwtToken(CustomUser customUser) { // TODO - CustomUserDetails
-        logger.debug("Generating token for user: {} with roles {}", customUser.getUsername(), customUser.getRoles());
 
         List<String> authorities = customUser.getRoles().stream()
                 .flatMap(role -> {
@@ -56,7 +57,11 @@ public class JwtUtils {
                 .signWith(key)
                 .compact();
 
-        logger.info("Successfully generated token for user: {}", customUser.getUsername());
+        LogUtil.info(logger,
+                "JWT_GENERATED",
+                "Token generated successfully",
+                "username", customUser.getUsername(), "roles", authorities);
+
         return token;
     }
 
@@ -69,11 +74,11 @@ public class JwtUtils {
                     .getPayload();
 
             String username = claims.getSubject();
-            logger.debug("Extracted username: {}", username);
+            LogUtil.info(logger, "JWT_USERNAME_EXTRACTED", null, "username", username);
             return username;
 
         } catch (Exception e) {
-            logger.warn("Failed to extract username: {}", e.getMessage());
+            LogUtil.warn(logger, "JWT_USERNAME_FAILED", e.getMessage());
             return null;
         }
     }
@@ -88,7 +93,7 @@ public class JwtUtils {
         List<?> authoritiesClaim = claims.get("authorities", List.class);
 
         if (authoritiesClaim == null || authoritiesClaim.isEmpty()) {
-            logger.warn("No authorities found in token");
+            LogUtil.warn(logger, "JWT_NO_AUTHORITIES", "No authorities found in token");
             return Set.of();
         }
 
@@ -100,7 +105,8 @@ public class JwtUtils {
                 .map(UserRole::valueOf)
                 .collect(Collectors.toSet());
 
-        logger.debug("Extracted roles: {}", roles);
+        LogUtil.info(logger, "JWT_ROLES_EXTRACTED", null, "roles", roles);
+
         return roles;
     }
 
@@ -111,11 +117,11 @@ public class JwtUtils {
                     .build()
                     .parseSignedClaims(authToken);
 
-            logger.debug("JWT validation successful");
+            LogUtil.info(logger, "JWT_VALIDATION_SUCCESS", "JWT validation successful");
             return true;
 
         } catch (Exception e) {
-            logger.error("JWT validation failed: {}", e.getMessage());
+            LogUtil.error(logger, "JWT_VALIDATION_FAILED", e.getMessage());
         }
 
         return false;
