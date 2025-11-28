@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import se.mojujo.userservice.security.AuthService;
 import se.mojujo.userservice.security.JwtUtils;
+import se.mojujo.userservice.security.dto.AuthResponseDTO;
 import se.mojujo.userservice.user.CustomUserDetails;
 import se.mojujo.userservice.user.dto.CustomUserLoginDTO;
 
@@ -25,32 +27,21 @@ import java.util.stream.Collectors;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final AuthenticationManager authenticationManager;
-    private final JwtUtils jwtUtils;
+    private final AuthService authService;
 
     @Autowired
-    public AuthController(AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
-        this.authenticationManager = authenticationManager;
-        this.jwtUtils = jwtUtils;
+    public AuthController(AuthService authService) {
+        this.authService = authService;
     }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody CustomUserLoginDTO loginDTO, HttpServletResponse response) {
-        // Authenticate
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginDTO.username(),
-                        loginDTO.password()
-                )
-        );
 
-        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-
-        // Generate JWT Token
-        String token = jwtUtils.generateJwtToken(customUserDetails.getCustomUser());
+        // Login Attempt
+        AuthResponseDTO authResponse = authService.login(loginDTO.username(), loginDTO.password());
 
         // Set Cookie
-        Cookie authCookie = new Cookie("authToken", token);
+        Cookie authCookie = new Cookie("authToken", authResponse.token());
         authCookie.setHttpOnly(true);
         authCookie.setSecure(false);
         authCookie.setMaxAge(3600);
@@ -58,28 +49,15 @@ public class AuthController {
         authCookie.setAttribute("SameSite", "Lax");
         response.addCookie(authCookie);
 
-        // List Roles
-        List<String> roles = customUserDetails.getAuthorities()
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .toList();
-
         return ResponseEntity.ok(Map.of(
                 "username", loginDTO.username(),
-                "roles", roles,
-                "token", token
+                "roles", authResponse.roles(),
+                "token", authResponse.token()
         ));
     }
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletResponse response) {
-        // Clear JWT cookie
-        Cookie authCookie = new Cookie("authToken", null);
-        authCookie.setHttpOnly(true);
-        authCookie.setSecure(false);
-        authCookie.setPath("/");
-        authCookie.setMaxAge(0);
-        response.addCookie(authCookie);
 
         return ResponseEntity.ok(Map.of("message", "You've been logged out"));
     }

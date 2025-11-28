@@ -14,7 +14,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
             UsernameAlreadyExistsException.class,
             EmailAlreadyExistsException.class,
-            UserNotFoundException.class
+            UserNotFoundException.class,
+            InvalidCredentialsException.class
     })
     public ResponseEntity<ProblemDetail> handleErrorResponse(@NotNull ErrorResponse e) {
         return ResponseEntity
