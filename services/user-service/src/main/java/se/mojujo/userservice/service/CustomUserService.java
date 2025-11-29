@@ -16,7 +16,9 @@ import se.mojujo.userservice.user.dto.CustomUserResponseDTO;
 import se.mojujo.userservice.user.mapper.CustomUserMapper;
 import se.mojujo.userservice.util.LogUtil;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class CustomUserService {
@@ -62,12 +64,11 @@ public class CustomUserService {
                 "User created successfully",
                 "userId", savedUser.getId(), "username", savedUser.getUsername());
 
-        Map<String, Object> auditData = Map.of(
-                "userId", savedUser.getId(),
-                "username", savedUser.getUsername(),
-                "email", savedUser.getEmail(),
-                "roles", savedUser.getRoles().stream().map(UserRole::getRoleName).toList()
-        );
+        Map<String, Object> auditData = new HashMap<>();
+        auditData.put("userId", savedUser.getId());
+        auditData.put("username", savedUser.getUsername());
+        auditData.put("email", savedUser.getEmail());
+        auditData.put("roles", savedUser.getRoles().stream().map(UserRole::getRoleName).collect(Collectors.toSet()));
 
         auditService.sendAuditEvent("USER_CREATED", auditData);
 

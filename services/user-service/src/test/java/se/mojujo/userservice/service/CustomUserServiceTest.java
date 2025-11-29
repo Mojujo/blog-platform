@@ -32,6 +32,9 @@ public class CustomUserServiceTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
+    @Mock
+    private AuditService auditService;
+
     @InjectMocks
     private CustomUserService customUserService;
 
@@ -64,6 +67,7 @@ public class CustomUserServiceTest {
         assertEquals(dto.email(), response.email());
         assertTrue(response.roles().contains("ROLE_USER"));
         verify(customUserRepository, times(1)).save(entity);
+        verify(auditService, times(1)).sendAuditEvent(eq("USER_CREATED"), anyMap());
     }
 
     @Test
