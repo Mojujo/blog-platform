@@ -10,7 +10,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import se.mojujo.userservice.repository.CustomUserRepository;
-import se.mojujo.userservice.user.CustomUserService;
+import se.mojujo.userservice.service.CustomUserService;
 import se.mojujo.userservice.user.authority.UserRole;
 import se.mojujo.userservice.user.dto.CustomUserCreationDTO;
 import se.mojujo.userservice.user.dto.CustomUserResponseDTO;

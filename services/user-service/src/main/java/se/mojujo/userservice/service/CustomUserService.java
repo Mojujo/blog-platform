@@ -1,4 +1,4 @@
-package se.mojujo.userservice.user;
+package se.mojujo.userservice.service;
 
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import se.mojujo.userservice.exception.EmailAlreadyExistsException;
 import se.mojujo.userservice.exception.UsernameAlreadyExistsException;
 import se.mojujo.userservice.repository.CustomUserRepository;
+import se.mojujo.userservice.user.CustomUser;
 import se.mojujo.userservice.user.dto.CustomUserCreationDTO;
 import se.mojujo.userservice.user.dto.CustomUserResponseDTO;
 import se.mojujo.userservice.user.mapper.CustomUserMapper;

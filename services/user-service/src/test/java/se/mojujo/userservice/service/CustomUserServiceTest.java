@@ -7,18 +7,15 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import se.mojujo.userservice.exception.EmailAlreadyExistsException;
-import se.mojujo.userservice.exception.UserNotFoundException;
 import se.mojujo.userservice.exception.UsernameAlreadyExistsException;
 import se.mojujo.userservice.repository.CustomUserRepository;
 import se.mojujo.userservice.user.CustomUser;
-import se.mojujo.userservice.user.CustomUserService;
 import se.mojujo.userservice.user.authority.UserRole;
 import se.mojujo.userservice.user.dto.CustomUserCreationDTO;
 import se.mojujo.userservice.user.dto.CustomUserResponseDTO;
 import se.mojujo.userservice.user.mapper.CustomUserMapper;
 
 import java.util.Set;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
