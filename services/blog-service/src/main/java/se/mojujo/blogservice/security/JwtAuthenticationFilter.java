@@ -17,6 +17,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import se.mojujo.blogservice.post.AuthenticatedUserDetails;
+import se.mojujo.blogservice.util.LogUtil;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -44,7 +45,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
 
-        logger.info("Filter starting");
+        LogUtil.info(logger, "JWT_FILTER_START", null, "requestURI", request.getRequestURI());
 
         // Extract token
         String token = jwtUtils.extractJwtFromCookie(request);
@@ -53,12 +54,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         if (token == null) {
-            logger.debug("No JWT token found in request");
+            LogUtil.info(logger, "JWT_TOKEN_MISSING", "No JWT token found in request", "requestURI", request.getRequestURI());
             filterChain.doFilter(request, response);
             return;
         }
 
-        logger.debug("JWT token found: {}", token);
+        LogUtil.info(logger, "JWT_TOKEN_FOUND", "JWT token detected in request", "token", LogUtil.maskToken(token), "requestURI", request.getRequestURI());
+
 
         if (jwtUtils.validateJwtToken(token)) {
             UUID userId = jwtUtils.getUserIdFromJwtToken(token);
@@ -71,7 +73,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toSet());
 
-                logger.debug("Authorities found: {}", authorities);
+
+                LogUtil.info(logger, "JWT_ROLES_PARSED", null,
+                        "username", username,
+                        "roles", roles.toString(),
+                        "requestURI", request.getRequestURI());
 
                 AuthenticatedUserDetails authUser = new AuthenticatedUserDetails(userId, username, authorities);
 
@@ -80,9 +86,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                logger.debug("Authenticated user '{}' with roles '{}'", username, roles);
+
+                LogUtil.info(logger, "JWT_AUTH_SUCCESS", null, "username", username, "requestURI", request.getRequestURI());
             }
+        } else {
+            LogUtil.warn(logger, "JWT_AUTH_INVALID_TOKEN", null, "requestURI", request.getRequestURI());
         }
+
         filterChain.doFilter(request, response);
+
+        LogUtil.info(logger, "JWT_FILTER_END", null, "requestURI", request.getRequestURI());
     }
 }
