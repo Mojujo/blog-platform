@@ -6,6 +6,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="shared" />
         <module name="user-service" />
         <module name="blog-service" />
         <module name="audit-service" />
@@ -18,6 +19,7 @@
       <module name="audit-service" options="-parameters" />
       <module name="blog-service" options="-parameters" />
       <module name="notification-service" options="-parameters" />
+      <module name="shared" options="-parameters" />
       <module name="user-service" options="-parameters" />
     </option>
   </component>
