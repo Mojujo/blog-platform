@@ -10,10 +10,13 @@ import se.mojujo.userservice.exception.EmailAlreadyExistsException;
 import se.mojujo.userservice.exception.UsernameAlreadyExistsException;
 import se.mojujo.userservice.repository.CustomUserRepository;
 import se.mojujo.userservice.user.CustomUser;
+import se.mojujo.userservice.user.authority.UserRole;
 import se.mojujo.userservice.user.dto.CustomUserCreationDTO;
 import se.mojujo.userservice.user.dto.CustomUserResponseDTO;
 import se.mojujo.userservice.user.mapper.CustomUserMapper;
 import se.mojujo.userservice.util.LogUtil;
+
+import java.util.Map;
 
 @Service
 public class CustomUserService {
@@ -23,12 +26,14 @@ public class CustomUserService {
     private final CustomUserRepository customUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final CustomUserMapper customUserMapper;
+    private final AuditService auditService;
 
     @Autowired
-    public CustomUserService(CustomUserRepository customUserRepository, PasswordEncoder passwordEncoder, CustomUserMapper customUserMapper) {
+    public CustomUserService(CustomUserRepository customUserRepository, PasswordEncoder passwordEncoder, CustomUserMapper customUserMapper, AuditService auditService) {
         this.customUserRepository = customUserRepository;
         this.passwordEncoder = passwordEncoder;
         this.customUserMapper = customUserMapper;
+        this.auditService = auditService;
     }
 
     @Transactional
@@ -56,6 +61,15 @@ public class CustomUserService {
                 "USER_CREATED",
                 "User created successfully",
                 "userId", savedUser.getId(), "username", savedUser.getUsername());
+
+        Map<String, Object> auditData = Map.of(
+                "userId", savedUser.getId(),
+                "username", savedUser.getUsername(),
+                "email", savedUser.getEmail(),
+                "roles", savedUser.getRoles().stream().map(UserRole::getRoleName).toList()
+        );
+
+        auditService.sendAuditEvent("USER_CREATED", auditData);
 
         return customUserMapper.toResponseDTO(savedUser);
     }
