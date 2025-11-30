@@ -12,6 +12,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import se.mojujo.userservice.repository.CustomUserRepository;
+import se.mojujo.userservice.security.JwtUtils;
 import se.mojujo.userservice.service.AuditService;
 import se.mojujo.userservice.service.CustomUserService;
 import se.mojujo.userservice.user.authority.UserRole;
@@ -52,6 +53,9 @@ public class CustomUserServiceIntegrationTest {
 
     @MockitoBean
     private AuditService auditService;
+
+    @MockitoBean
+    private JwtUtils jwtUtils;
 
     @Test
     void createUserIntegration() {

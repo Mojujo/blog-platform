@@ -1,6 +1,5 @@
 package se.mojujo.auditservice.listener;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -31,13 +30,13 @@ public class AuditEventListener {
 
         try {
             String eventType = (String) message.get("eventType");
-            Object data = message.get("data");
-            Instant timestamp = (Instant) message.get("timestamp");
 
-            // Convert data to JSON
-            String jsonData = new ObjectMapper().writeValueAsString(data);
+            @SuppressWarnings("unchecked")
+            Map<String, Object> data = (Map<String, Object>) message.get("data");
 
-            AuditEvent auditEvent = new AuditEvent(eventType, jsonData, timestamp);
+            Instant timestamp = Instant.parse((String) message.get("timestamp"));
+
+            AuditEvent auditEvent = new AuditEvent(eventType, data, timestamp);
 
             auditEventRepository.save(auditEvent);
 

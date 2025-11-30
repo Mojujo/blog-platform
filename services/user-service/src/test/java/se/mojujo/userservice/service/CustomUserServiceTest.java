@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import se.mojujo.userservice.exception.EmailAlreadyExistsException;
 import se.mojujo.userservice.exception.UsernameAlreadyExistsException;
 import se.mojujo.userservice.repository.CustomUserRepository;
+import se.mojujo.userservice.security.JwtUtils;
 import se.mojujo.userservice.user.CustomUser;
 import se.mojujo.userservice.user.authority.UserRole;
 import se.mojujo.userservice.user.dto.CustomUserCreationDTO;
@@ -34,6 +35,9 @@ public class CustomUserServiceTest {
 
     @Mock
     private AuditService auditService;
+
+    @Mock
+    private JwtUtils jwtUtils;
 
     @InjectMocks
     private CustomUserService customUserService;
