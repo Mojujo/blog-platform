@@ -14,8 +14,6 @@ import se.mojujo.userservice.user.dto.CustomUserCreationDTO;
 import se.mojujo.userservice.user.dto.CustomUserResponseDTO;
 import se.mojujo.userservice.user.mapper.CustomUserMapper;
 
-import java.util.Map;
-
 @RestController
 @RequestMapping
 public class UserController {
