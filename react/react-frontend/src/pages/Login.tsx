@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthContext"
 
 export default function Login() {
 
-    const { login, user} = useAuth();
+    const { login } = useAuth();
 
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
@@ -13,7 +13,7 @@ export default function Login() {
         const success = await login(username, password);
 
         if (success) {
-            setMessage(`Welcome ${user?.username}`);
+            setMessage("Welcome");
         } else {
             setMessage("Login failed");
         }

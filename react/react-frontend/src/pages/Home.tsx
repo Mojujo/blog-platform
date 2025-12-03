@@ -5,7 +5,7 @@ export default function Home() {
 
     useEffect(() => {
         // GET request to trigger backend's CsrfCookieFilter
-        apiClient.get("/");
+        apiClient.get("/user/csrf", {withCredentials: true });
     }, []);
 
     return (
