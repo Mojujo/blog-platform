@@ -84,13 +84,12 @@ public class AuthService {
         LogUtil.info(logger, "LOGOUT_SUCCESS", null);
     }
 
-    public CustomUserResponseDTO getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
+    public CustomUserResponseDTO getCurrentUser(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated() ||
+                !(authentication.getPrincipal() instanceof CustomUserDetails customUserDetails)) {
             throw new AuthorizationExpired("Authorization expired");
         }
 
-        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
         return customUserMapper.toResponseDTO(customUserDetails.getCustomUser());
     }
 }

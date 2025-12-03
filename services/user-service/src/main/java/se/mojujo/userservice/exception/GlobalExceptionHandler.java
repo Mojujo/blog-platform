@@ -20,6 +20,7 @@ public class GlobalExceptionHandler {
             EmailAlreadyExistsException.class,
             UserNotFoundException.class,
             InvalidCredentialsException.class,
+            AuthorizationExpired.class
     })
     public ResponseEntity<ProblemDetail> handleErrorResponse(@NotNull ErrorResponse e) {
         return ResponseEntity
