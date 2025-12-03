@@ -3,10 +3,11 @@ package se.mojujo.blogservice.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import se.mojujo.blogservice.post.BlogPostService;
+import se.mojujo.blogservice.service.BlogPostService;
 import se.mojujo.blogservice.post.dto.BlogPostCreationDTO;
 import se.mojujo.blogservice.post.dto.BlogPostResponseDTO;
 import se.mojujo.blogservice.util.LogUtil;
@@ -59,5 +60,12 @@ public class BlogPostController {
         LogUtil.info(logger, "POST_DELETE_SUCCESS", null, "postId", postId);
     }
 
-    // TODO GET POSTS
+    @GetMapping
+    public Page<BlogPostResponseDTO> getPosts(
+            Authentication authentication,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        return blogPostService.getAllPostsOrdered(authentication, page, size);
+    }
 }
