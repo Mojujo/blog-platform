@@ -15,7 +15,7 @@ import se.mojujo.userservice.user.dto.CustomUserResponseDTO;
 import se.mojujo.userservice.user.mapper.CustomUserMapper;
 
 @RestController
-@RequestMapping
+@RequestMapping("/user")
 public class UserController {
 
     private final CustomUserService customUserService;

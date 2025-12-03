@@ -52,7 +52,6 @@ public class AppSecurityConfig {
 
                 // Route Authorization
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/").permitAll()
                         .requestMatchers("/post").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
                 )
