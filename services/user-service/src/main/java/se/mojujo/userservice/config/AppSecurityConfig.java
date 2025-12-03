@@ -13,7 +13,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
-import org.springframework.web.cors.CorsConfigurationSource;
 import se.mojujo.userservice.security.CsrfCookieFilter;
 import se.mojujo.userservice.security.JwtAuthenticationFilter;
 
