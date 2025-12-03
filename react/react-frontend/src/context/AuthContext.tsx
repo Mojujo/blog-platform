@@ -1,7 +1,6 @@
 import { createContext, useState, ReactNode, useContext, useEffect } from "react";
 import { getXsrfToken } from "../util/csrfUtil";
 import apiClient from "../api/apiClient";
-import type { AxiosRequestConfig } from "axios";
 
 type User = {
     username: string;
@@ -68,6 +67,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
     const login = async (username: string, password: string): Promise<boolean> => {
+
+        await apiClient.get("/user/csrf");
 
         try {
             const response = await apiClient.post("/auth/login", { username, password });
