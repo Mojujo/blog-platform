@@ -1,26 +1,21 @@
 import { useState } from "react"
-import apiClient from "../api/apiClient"
-import { getXsrfToken } from "../util/csrfUtil"
+import { useAuth } from "../context/AuthContext"
 
 export default function Login() {
+
+    const { login, user} = useAuth();
 
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [message, setMessage] = useState("")
 
     const handleLogin = async () => {
-        const xsrfToken = getXsrfToken();
+        const success = await login(username, password);
 
-        try {
-            const response = await apiClient.post("/auth/login",
-                { username, password },
-                { headers: { "X-XSRF-TOKEN": xsrfToken || "" } }
-            );
-
-            setMessage(`Welcome ${response.data.username}`);
-
-        } catch (err: any) {
-            setMessage(err.response?.data.message || "Login Failed");
+        if (success) {
+            setMessage(`Welcome ${user?.username}`);
+        } else {
+            setMessage("Login failed");
         }
     };
 
