@@ -10,7 +10,7 @@ export default function NavHeader({ setScreen }: { setScreen: (s: Screen) => voi
             <header className={styles.centerHeader}>
                 <nav className={styles.navContainer}>
                     <button
-                        className={styles.homeButton}
+                        className={styles.navButton}
                         onClick={() => setScreen("home")}>
                         <img src="./assets/home.svg" alt="" className={styles.homeImage} />
                     </button>
@@ -19,18 +19,39 @@ export default function NavHeader({ setScreen }: { setScreen: (s: Screen) => voi
                         Min fina blog-platform
                     </h2>
 
-                    <button
-                        onClick={() => {
-                            if (!user) {
-                                setScreen("login");
-                            } else {
-                                logout();
-                                setScreen("home");
-                            }
-                        }}
-                    >
-                        {user ? "Logout" : "Login"}
-                    </button>
+                    <div className={styles.accessButtons}>
+                        {user && (
+                            <button className={styles.navButton}
+                                onClick={() => setScreen("profile")}>
+                                <img src="./assets/profile.svg" alt="Profile" />
+                            </button>
+                        )}
+
+
+                        {!user ? (
+                            <>
+                                <button className={styles.loginButton}
+                                    onClick={() => setScreen("login")
+
+                                    }>
+                                    <img src="./assets/login.svg" alt="" className={styles.accessImage} />
+                                    <p>Login</p>
+                                </button>
+                            </>
+                        ) : (
+                            <>
+
+                                <button className={styles.logoutButton}
+                                    onClick={async () => {
+                                        logout();
+                                        setScreen("home")
+                                    }}>
+                                    <img src="./assets/logout.svg" alt="" className={styles.accessImage} />
+                                    <p>Logout</p>
+                                </button>
+                            </>
+                        )}
+                    </div>
 
                 </nav>
             </header>
