@@ -1,4 +1,4 @@
-import { createContext, useState, ReactNode, useContext } from "react";
+import { createContext, useState, ReactNode, useContext, useEffect } from "react";
 import { getXsrfToken } from "../util/csrfUtil";
 import apiClient from "../api/apiClient";
 
@@ -19,6 +19,30 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const [user, setUser] = useState<User | null>(null);
+
+    const refreshUser = async () => {
+
+        const xsrfToken = getXsrfToken();
+
+        try {
+        const response = await apiClient.get("/auth/me",
+            {
+                headers: { "X-XSRF-TOKEN": xsrfToken || "" },
+                withCredentials: true
+            });
+
+            setUser({
+                username: response.data.username,
+                roles: response.data.roles
+            });
+        } catch (err: any) {
+            setUser(null);
+        }
+    };
+
+    useEffect(() => {
+        refreshUser();
+    }, []);
 
     const login = async (username: string, password: string): Promise<boolean> => {
 
