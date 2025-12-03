@@ -22,13 +22,11 @@ import se.mojujo.userservice.security.JwtAuthenticationFilter;
 public class AppSecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final CorsConfigurationSource corsConfigurationSource;
     private final CsrfCookieFilter csrfCookieFilter;
 
     @Autowired
-    public AppSecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, CorsConfigurationSource corsConfigurationSource, CsrfCookieFilter csrfCookieFilter) {
+    public AppSecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, CsrfCookieFilter csrfCookieFilter) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-        this.corsConfigurationSource = corsConfigurationSource;
         this.csrfCookieFilter = csrfCookieFilter;
     }
 
@@ -53,9 +51,6 @@ public class AppSecurityConfig {
                         .csrfTokenRequestHandler(csrfTokenRequestAttributeHandler())
                 )
 
-                // CORS
-                .cors(cors -> cors.configurationSource(corsConfigurationSource))
-
                 // Route Authorization
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/register", "/auth/**").permitAll()
@@ -63,7 +58,7 @@ public class AppSecurityConfig {
                         .requestMatchers("/profile").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
                 )
-                // TODO AUTH LOGOUT?
+
                 // Stateless session
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)

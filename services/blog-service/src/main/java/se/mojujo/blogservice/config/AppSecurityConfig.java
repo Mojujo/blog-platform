@@ -22,13 +22,11 @@ import se.mojujo.blogservice.security.JwtAuthenticationFilter;
 public class AppSecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final CorsConfigurationSource corsConfigurationSource;
     private final CsrfCookieFilter csrfCookieFilter;
 
     @Autowired
-    public AppSecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, CorsConfigurationSource corsConfigurationSource, CsrfCookieFilter csrfCookieFilter) {
+    public AppSecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, CsrfCookieFilter csrfCookieFilter) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-        this.corsConfigurationSource = corsConfigurationSource;
         this.csrfCookieFilter = csrfCookieFilter;
     }
 
@@ -52,9 +50,6 @@ public class AppSecurityConfig {
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .csrfTokenRequestHandler(csrfTokenRequestAttributeHandler())
                 )
-
-                // CORS
-                .cors(cors -> cors.configurationSource(corsConfigurationSource))
 
                 // Route Authorization
                 .authorizeHttpRequests(auth -> auth
