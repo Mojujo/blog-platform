@@ -15,7 +15,7 @@ import java.util.UUID;
 
 
 @RestController
-@RequestMapping
+@RequestMapping("/post")
 @PreAuthorize("hasAnyRole('USER','ADMIN')")
 public class BlogPostController {
 
@@ -28,7 +28,7 @@ public class BlogPostController {
         this.blogPostService = blogPostService;
     }
 
-    @PostMapping("/post")
+    @PostMapping
     public BlogPostResponseDTO createPost(@RequestBody BlogPostCreationDTO dto, Authentication authentication) {
 
         BlogPostResponseDTO response = blogPostService.createBlogPost(dto, authentication);
@@ -58,4 +58,6 @@ public class BlogPostController {
 
         LogUtil.info(logger, "POST_DELETE_SUCCESS", null, "postId", postId);
     }
+
+    // TODO GET POSTS
 }
