@@ -1,6 +1,7 @@
 package se.mojujo.userservice.controller;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,8 +49,8 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletResponse response) {
-        authService.logout(response);
+    public ResponseEntity<?> logout(HttpServletResponse response, HttpServletRequest request) {
+        authService.logout(response, request);
         return ResponseEntity.ok(Map.of("message", "You've been logged out"));
     }
 

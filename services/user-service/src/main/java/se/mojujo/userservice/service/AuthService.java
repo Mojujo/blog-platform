@@ -1,7 +1,9 @@
 package se.mojujo.userservice.service;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -69,7 +71,7 @@ public class AuthService {
         }
     }
 
-    public void logout(HttpServletResponse response) {
+    public void logout(HttpServletResponse response, HttpServletRequest request) {
 
         LogUtil.info(logger, "LOGOUT_ATTEMPT", null);
 
@@ -79,6 +81,12 @@ public class AuthService {
         authCookie.setPath("/");
         authCookie.setMaxAge(0);
         response.addCookie(authCookie);
+
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+            LogUtil.info(logger, "SESSION_INVALIDATED", null);
+        }
 
         LogUtil.info(logger, "LOGOUT_SUCCESS", null);
     }
