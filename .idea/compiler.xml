@@ -10,7 +10,6 @@
         <module name="blog-service" />
         <module name="audit-service" />
         <module name="notification-service" />
-        <module name="gateway-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
