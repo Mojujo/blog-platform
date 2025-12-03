@@ -4,6 +4,9 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import se.mojujo.blogservice.exception.BlogPostAccessDeniedException;
@@ -20,8 +23,10 @@ import se.mojujo.blogservice.util.LogUtil;
 
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class BlogPostService {
@@ -140,5 +145,17 @@ public class BlogPostService {
         blogPostRepository.delete(post);
 
         LogUtil.info(logger, "BLOG_DELETE_SUCCESS", null, "postId", postId, "userId", user.getUserId());
+    }
+
+    public Page<BlogPostResponseDTO> getAllPostsOrdered(Authentication authentication, int page, int size) {
+
+        AuthenticatedUserDetails user = (AuthenticatedUserDetails) authentication.getPrincipal();
+
+        LogUtil.info(logger, "BLOG_GET_START", null, "userId", user.getUserId());
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<BlogPost> posts = blogPostRepository.findAllByUserIdOrderByCreatedDateDesc(user.getUserId(), pageable);
+
+        return posts.map(blogPostMapper::toResponse);
     }
 }
