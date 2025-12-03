@@ -14,6 +14,8 @@ import se.mojujo.userservice.user.dto.CustomUserCreationDTO;
 import se.mojujo.userservice.user.dto.CustomUserResponseDTO;
 import se.mojujo.userservice.user.mapper.CustomUserMapper;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping
 public class UserController {
@@ -42,5 +44,11 @@ public class UserController {
         CustomUserResponseDTO responseDTO = customUserMapper.toResponseDTO(customUser);
 
         return ResponseEntity.ok(responseDTO);
+    }
+
+    // Endpoint to make sure CSRF-tokens are securely generated on frontend
+    @GetMapping("/csrf")
+    public void getCsrfToken() {
+        // No body needed; CsrfCookieFilter will set the XSRF-TOKEN cookie for frontend use
     }
 }
