@@ -9,11 +9,15 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import se.mojujo.userservice.exception.AuthorizationExpired;
 import se.mojujo.userservice.exception.InvalidCredentialsException;
 import se.mojujo.userservice.security.JwtUtils;
 import se.mojujo.userservice.security.dto.AuthResponseDTO;
 import se.mojujo.userservice.user.CustomUserDetails;
+import se.mojujo.userservice.user.dto.CustomUserResponseDTO;
+import se.mojujo.userservice.user.mapper.CustomUserMapper;
 import se.mojujo.userservice.util.LogUtil;
 
 import java.util.List;
@@ -25,10 +29,12 @@ public class AuthService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
+    private final CustomUserMapper customUserMapper;
 
-    public AuthService(AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
+    public AuthService(AuthenticationManager authenticationManager, JwtUtils jwtUtils, CustomUserMapper customUserMapper) {
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
+        this.customUserMapper = customUserMapper;
     }
 
     public AuthResponseDTO login(String username, String password) {
@@ -76,5 +82,15 @@ public class AuthService {
         response.addCookie(authCookie);
 
         LogUtil.info(logger, "LOGOUT_SUCCESS", null);
+    }
+
+    public CustomUserResponseDTO getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new AuthorizationExpired("Authorization expired");
+        }
+
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+        return customUserMapper.toResponseDTO(customUserDetails.getCustomUser());
     }
 }

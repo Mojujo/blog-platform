@@ -43,4 +43,10 @@ public class UserController {
 
         return ResponseEntity.ok(responseDTO);
     }
+
+    // Endpoint to make sure CSRF-tokens are securely generated on frontend
+    @GetMapping("/csrf")
+    public void getCsrfToken() {
+        // No body needed; CsrfCookieFilter will set the XSRF-TOKEN cookie for frontend use
+    }
 }
