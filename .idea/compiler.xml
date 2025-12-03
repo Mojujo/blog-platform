@@ -10,6 +10,7 @@
         <module name="blog-service" />
         <module name="audit-service" />
         <module name="notification-service" />
+        <module name="gateway-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -20,6 +21,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="audit-service" options="-parameters" />
       <module name="blog-service" options="-parameters" />
+      <module name="gateway-service" options="-parameters" />
       <module name="notification-service" options="-parameters" />
       <module name="shared" options="-parameters" />
       <module name="user-service" options="-parameters" />
