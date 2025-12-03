@@ -62,6 +62,9 @@ services:
     build:
       context: ./services/gateway-service
       dockerfile: Dockerfile
+    environment:
+      USER_SERVICE_URI: ${USER_SERVICE_URI}
+      BLOG_SERVICE_URI: ${BLOG_SERVICE_URI}
     ports:
       - "8888:8888"
     depends_on:
