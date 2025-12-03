@@ -1,6 +1,5 @@
-package se.mojujo.blogservice.post;
+package se.mojujo.blogservice.service;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +10,8 @@ import se.mojujo.blogservice.exception.BlogPostAccessDeniedException;
 import se.mojujo.blogservice.exception.BlogPostNotFoundException;
 import se.mojujo.blogservice.exception.InvalidBlogPostException;
 import se.mojujo.blogservice.exception.UnauthorizedUserException;
+import se.mojujo.blogservice.post.AuthenticatedUserDetails;
+import se.mojujo.blogservice.post.BlogPost;
 import se.mojujo.blogservice.post.dto.BlogPostCreationDTO;
 import se.mojujo.blogservice.post.dto.BlogPostResponseDTO;
 import se.mojujo.blogservice.post.mapper.BlogPostMapper;
@@ -18,6 +19,8 @@ import se.mojujo.blogservice.repository.BlogPostRepository;
 import se.mojujo.blogservice.util.LogUtil;
 
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -27,11 +30,13 @@ public class BlogPostService {
 
     private final BlogPostRepository blogPostRepository;
     private final BlogPostMapper blogPostMapper;
+    private final AuditService auditService;
 
     @Autowired
-    public BlogPostService(BlogPostRepository blogPostRepository, BlogPostMapper blogPostMapper) {
+    public BlogPostService(BlogPostRepository blogPostRepository, BlogPostMapper blogPostMapper, AuditService auditService) {
         this.blogPostRepository = blogPostRepository;
         this.blogPostMapper = blogPostMapper;
+        this.auditService = auditService;
     }
 
     @Transactional
@@ -57,6 +62,15 @@ public class BlogPostService {
         BlogPost savedPost = blogPostRepository.save(post);
 
         LogUtil.info(logger, "BLOG_CREATE_SUCCESS", null, "userId", user.getUserId(), "postId", savedPost.getId());
+
+        Map<String, Object> auditData = new HashMap<>();
+        auditData.put("userId", user.getUserId());
+        auditData.put("postId", savedPost.getId());
+        auditData.put("title", dto.title());
+        auditData.put("content", dto.content());
+        auditData.put("createdDate", savedPost.getCreatedDate());
+
+        auditService.sendAuditEvent("POST_CREATED", auditData);
 
         return blogPostMapper.toResponse(savedPost);
     }

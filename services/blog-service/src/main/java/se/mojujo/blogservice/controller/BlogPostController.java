@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import se.mojujo.blogservice.post.BlogPostService;
+import se.mojujo.blogservice.service.BlogPostService;
 import se.mojujo.blogservice.post.dto.BlogPostCreationDTO;
 import se.mojujo.blogservice.post.dto.BlogPostResponseDTO;
 import se.mojujo.blogservice.util.LogUtil;
