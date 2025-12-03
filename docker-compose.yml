@@ -57,3 +57,14 @@ services:
       - "8082:8082"
     depends_on:
       - rabbitmq
+
+  gateway-service:
+    build:
+      context: ./services/gateway-service
+      dockerfile: Dockerfile
+    ports:
+      - "8888:8888"
+    depends_on:
+      - user-service
+      - blog-service
+      - audit-service
