@@ -1,4 +1,4 @@
-package se.mojujo.userservice.security;
+package se.mojujo.userservice.service;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -11,6 +11,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import se.mojujo.userservice.exception.InvalidCredentialsException;
+import se.mojujo.userservice.security.JwtUtils;
 import se.mojujo.userservice.security.dto.AuthResponseDTO;
 import se.mojujo.userservice.user.CustomUserDetails;
 import se.mojujo.userservice.util.LogUtil;

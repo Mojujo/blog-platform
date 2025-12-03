@@ -1,4 +1,4 @@
-package se.mojujo.userservice.user;
+package se.mojujo.userservice.service;
 
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
@@ -9,10 +9,16 @@ import org.springframework.stereotype.Service;
 import se.mojujo.userservice.exception.EmailAlreadyExistsException;
 import se.mojujo.userservice.exception.UsernameAlreadyExistsException;
 import se.mojujo.userservice.repository.CustomUserRepository;
+import se.mojujo.userservice.user.CustomUser;
+import se.mojujo.userservice.user.authority.UserRole;
 import se.mojujo.userservice.user.dto.CustomUserCreationDTO;
 import se.mojujo.userservice.user.dto.CustomUserResponseDTO;
 import se.mojujo.userservice.user.mapper.CustomUserMapper;
 import se.mojujo.userservice.util.LogUtil;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class CustomUserService {
@@ -22,12 +28,14 @@ public class CustomUserService {
     private final CustomUserRepository customUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final CustomUserMapper customUserMapper;
+    private final AuditService auditService;
 
     @Autowired
-    public CustomUserService(CustomUserRepository customUserRepository, PasswordEncoder passwordEncoder, CustomUserMapper customUserMapper) {
+    public CustomUserService(CustomUserRepository customUserRepository, PasswordEncoder passwordEncoder, CustomUserMapper customUserMapper, AuditService auditService) {
         this.customUserRepository = customUserRepository;
         this.passwordEncoder = passwordEncoder;
         this.customUserMapper = customUserMapper;
+        this.auditService = auditService;
     }
 
     @Transactional
@@ -55,6 +63,14 @@ public class CustomUserService {
                 "USER_CREATED",
                 "User created successfully",
                 "userId", savedUser.getId(), "username", savedUser.getUsername());
+
+        Map<String, Object> auditData = new HashMap<>();
+        auditData.put("userId", savedUser.getId());
+        auditData.put("username", savedUser.getUsername());
+        auditData.put("email", savedUser.getEmail());
+        auditData.put("roles", savedUser.getRoles().stream().map(UserRole::getRoleName).collect(Collectors.toSet()));
+
+        auditService.sendAuditEvent("USER_CREATED", auditData);
 
         return customUserMapper.toResponseDTO(savedUser);
     }

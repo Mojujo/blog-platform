@@ -3,14 +3,20 @@ package se.mojujo.userservice.integration;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import se.mojujo.userservice.repository.CustomUserRepository;
-import se.mojujo.userservice.user.CustomUserService;
+import se.mojujo.userservice.security.JwtUtils;
+import se.mojujo.userservice.service.AuditService;
+import se.mojujo.userservice.service.CustomUserService;
 import se.mojujo.userservice.user.authority.UserRole;
 import se.mojujo.userservice.user.dto.CustomUserCreationDTO;
 import se.mojujo.userservice.user.dto.CustomUserResponseDTO;
@@ -18,13 +24,18 @@ import se.mojujo.userservice.user.dto.CustomUserResponseDTO;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 @Transactional
 @Testcontainers
+@ActiveProfiles("test")
 public class CustomUserServiceIntegrationTest {
 
     @Container
+    @SuppressWarnings("all")
     public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:15-alpine")
             .withDatabaseName("testdb")
             .withUsername("test")
@@ -43,6 +54,12 @@ public class CustomUserServiceIntegrationTest {
     @Autowired
     private CustomUserRepository customUserRepository;
 
+    @MockitoBean
+    private AuditService auditService;
+
+    @MockitoBean
+    private JwtUtils jwtUtils;
+
     @Test
     void createUserIntegration() {
         CustomUserCreationDTO dto = new CustomUserCreationDTO(
@@ -59,10 +76,11 @@ public class CustomUserServiceIntegrationTest {
         assertEquals("oscar@integration.com", response.email());
         assertTrue(response.roles().contains("ROLE_USER"));
         assertEquals(1,customUserRepository.count());
+        verify(auditService).sendAuditEvent(eq("USER_CREATED"), anyMap());
     }
 
     @Test
-    void createUser_defaultBooleans_true() {
+    void createUserDefaultBooleansTrue() {
         CustomUserCreationDTO dto = new CustomUserCreationDTO(
                 "integration_user2",
                 "integration2@example.com",
@@ -70,7 +88,7 @@ public class CustomUserServiceIntegrationTest {
                 Set.of(UserRole.USER)
         );
 
-        var savedUser = customUserService.createUser(dto);
+        customUserService.createUser(dto);
         var userEntity = customUserRepository.findUserByUsername("integration_user2").orElseThrow();
 
         assertTrue(userEntity.isAccountNonExpired());
