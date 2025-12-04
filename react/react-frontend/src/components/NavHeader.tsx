@@ -14,7 +14,7 @@ export default function NavHeader({ setScreen }: { setScreen: (s: Screen) => voi
                         <button
                             className={styles.navButton}
                             onClick={() => setScreen("home")}>
-                            <img src="./assets/home.svg" alt="" className={styles.homeImage} />
+                            <img src="/assets/home.svg" alt="" className={styles.homeImage} />
                         </button>
                         <h2>
                             Teknikbloggen
@@ -29,7 +29,7 @@ export default function NavHeader({ setScreen }: { setScreen: (s: Screen) => voi
                         {user && (
                             <button className={styles.navButton}
                                 onClick={() => setScreen("profile")}>
-                                <img src="./assets/profile.svg" alt="Profile" />
+                                <img src="/assets/profile.svg" alt="Profile" />
                             </button>
                         )}
 
@@ -40,7 +40,7 @@ export default function NavHeader({ setScreen }: { setScreen: (s: Screen) => voi
                                     onClick={() => setScreen("login")
 
                                     }>
-                                    <img src="./assets/login.svg" alt="" className={styles.accessImage} />
+                                    <img src="/assets/login.svg" alt="" className={styles.accessImage} />
                                     <p>Login</p>
                                 </button>
                             </>
@@ -52,7 +52,7 @@ export default function NavHeader({ setScreen }: { setScreen: (s: Screen) => voi
                                         logout();
                                         setScreen("home")
                                     }}>
-                                    <img src="./assets/logout.svg" alt="" className={styles.accessImage} />
+                                    <img src="/assets/logout.svg" alt="" className={styles.accessImage} />
                                     <p>Logout</p>
                                 </button>
                             </>
