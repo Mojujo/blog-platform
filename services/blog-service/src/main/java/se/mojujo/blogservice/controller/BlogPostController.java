@@ -77,6 +77,9 @@ public class BlogPostController {
             @RequestParam(defaultValue = "10") int size) {
 
         Page<BlogPostResponseDTO> posts = blogPostService.getAllPosts(page, size);
+
+        LogUtil.info(logger, "FEED_FETCHED", null, "posts", posts.getTotalElements(), posts.getTotalPages());
+
         return ResponseEntity.ok(posts);
     }
 }
