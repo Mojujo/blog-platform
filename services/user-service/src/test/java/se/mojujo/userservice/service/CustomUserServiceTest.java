@@ -47,8 +47,7 @@ public class CustomUserServiceTest {
         CustomUserCreationDTO dto = new CustomUserCreationDTO(
                 "oscar",
                 "oscar@test.com",
-                "Password1!",
-                Set.of(UserRole.USER)
+                "Password1!"
         );
 
         CustomUser entity = new CustomUser(
@@ -79,8 +78,7 @@ public class CustomUserServiceTest {
         CustomUserCreationDTO dto = new CustomUserCreationDTO(
                 "oscar",
                 "oscar@test.com",
-                "Password1!",
-                Set.of(UserRole.USER)
+                "Password1!"
         );
 
         when(customUserRepository.existsByUsername(dto.username())).thenReturn(true);
@@ -93,8 +91,7 @@ public class CustomUserServiceTest {
         CustomUserCreationDTO dto = new CustomUserCreationDTO(
                 "oscar",
                 "oscar@test.com",
-                "Password1!",
-                Set.of(UserRole.USER)
+                "Password1!"
         );
 
         when(customUserRepository.existsByUsername(dto.username())).thenReturn(false);

@@ -65,8 +65,7 @@ public class CustomUserServiceIntegrationTest {
         CustomUserCreationDTO dto = new CustomUserCreationDTO(
                 "oscar_integration",
                 "oscar@integration.com",
-                "Password1!",
-                Set.of(UserRole.USER)
+                "Password1!"
         );
 
         CustomUserResponseDTO response = customUserService.createUser(dto);
@@ -84,8 +83,7 @@ public class CustomUserServiceIntegrationTest {
         CustomUserCreationDTO dto = new CustomUserCreationDTO(
                 "integration_user2",
                 "integration2@example.com",
-                "Password1!",
-                Set.of(UserRole.USER)
+                "Password1!"
         );
 
         customUserService.createUser(dto);
