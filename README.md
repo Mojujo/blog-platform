@@ -36,7 +36,11 @@ blog-platform/services/
         │── listener       # RabbitMQ Listener
         │── model          # PostgreSQL entities
         │── util           # Utility methods
-    
+        
+   gateway-service/
+        │── config         # Cors configuration
+        └── app...yml      # Routing and hosting
+        
     blog-service/
     user-service/
         │── config         # Configurations
