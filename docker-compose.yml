@@ -71,3 +71,13 @@ services:
       - user-service
       - blog-service
       - audit-service
+
+  react-frontend:
+    build:
+      context: ./react/react-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - blog-service
+      - user-service
