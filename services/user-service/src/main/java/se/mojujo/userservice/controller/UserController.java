@@ -9,13 +9,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import se.mojujo.userservice.user.CustomUser;
 import se.mojujo.userservice.user.CustomUserDetails;
-import se.mojujo.userservice.user.CustomUserService;
+import se.mojujo.userservice.service.CustomUserService;
 import se.mojujo.userservice.user.dto.CustomUserCreationDTO;
 import se.mojujo.userservice.user.dto.CustomUserResponseDTO;
 import se.mojujo.userservice.user.mapper.CustomUserMapper;
 
 @RestController
-@RequestMapping
+@RequestMapping("/user")
 public class UserController {
 
     private final CustomUserService customUserService;
@@ -42,5 +42,11 @@ public class UserController {
         CustomUserResponseDTO responseDTO = customUserMapper.toResponseDTO(customUser);
 
         return ResponseEntity.ok(responseDTO);
+    }
+
+    // Endpoint to make sure CSRF-tokens are securely generated on frontend
+    @GetMapping("/csrf")
+    public void getCsrfToken() {
+        // No body needed; CsrfCookieFilter will set the XSRF-TOKEN cookie for frontend use
     }
 }

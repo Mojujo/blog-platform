@@ -1,4 +1,4 @@
-package se.mojujo.userservice.user;
+package se.mojujo.userservice.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -6,6 +6,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import se.mojujo.userservice.repository.CustomUserRepository;
+import se.mojujo.userservice.user.CustomUser;
+import se.mojujo.userservice.user.CustomUserDetails;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {

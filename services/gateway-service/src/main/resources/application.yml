@@ -1,0 +1,18 @@
+server:
+  port: 8888
+
+spring:
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: user-service
+              uri: ${USER_SERVICE_URI:http://localhost:8080}
+              predicates:
+                - Path=/auth/**, /user/**
+
+            - id: blog-service
+              uri: ${BLOG_SERVICE_URI:http://localhost:8081}
+              predicates:
+                - Path=/post/**, /post

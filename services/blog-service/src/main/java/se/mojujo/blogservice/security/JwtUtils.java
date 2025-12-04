@@ -1,6 +1,7 @@
 package se.mojujo.blogservice.security;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
+import se.mojujo.blogservice.util.LogUtil;
 
 import javax.crypto.SecretKey;
 import java.util.*;
@@ -29,12 +31,13 @@ public class JwtUtils {
     public void init() {
         byte[] decodedKey = Base64.getDecoder().decode(base64Secret);
         this.key = Keys.hmacShaKeyFor(decodedKey);
+        LogUtil.info(logger, "JWT_INIT", "JWT secret key initialized successfully");
     }
 
     private final int jwtExpirationMs = (int) TimeUnit.HOURS.toMillis(1);
 
     public String generateJwtToken(String username, UUID userId, Set<String> roles) {
-        return Jwts.builder()
+        String token = Jwts.builder()
                 .subject(username)
                 .claim("userId", userId.toString())
                 .claim("roles", roles)
@@ -42,6 +45,15 @@ public class JwtUtils {
                 .expiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .signWith(key)
                 .compact();
+
+        LogUtil.info(logger,
+                "JWT_GENERATED",
+                "Token generated successfully",
+                "username", username,
+                "userId", userId.toString(),
+                "roles", roles.toString());
+
+        return token;
     }
 
     public boolean validateJwtToken(String token) {
@@ -51,11 +63,11 @@ public class JwtUtils {
                     .build()
                     .parseSignedClaims(token);
 
-            logger.debug("JWT validation successful");
+            LogUtil.info(logger, "JWT_VALIDATION_SUCCESS", "JWT validation successful");
             return true;
 
         } catch (Exception e) {
-            logger.error("JWT validation failed: {}", e.getMessage());
+            LogUtil.error(logger, "JWT_VALIDATION_FAILED", e.getMessage());
         }
 
         return false;
@@ -70,11 +82,11 @@ public class JwtUtils {
                     .getPayload();
 
             String username = claims.getSubject();
-            logger.debug("Extracted username: {}", username);
+            LogUtil.info(logger, "JWT_USERNAME_EXTRACTED", null, "username", username);
             return username;
 
         } catch (Exception e) {
-            logger.warn("Failed to extract username: {}", e.getMessage());
+            LogUtil.warn(logger, "JWT_USERNAME_FAILED", e.getMessage());
             return null;
         }
     }
@@ -89,27 +101,41 @@ public class JwtUtils {
 
             String id = claims.get("userId", String.class);
 
-            logger.debug("Extracted user id: {}", id);
+            LogUtil.info(logger, "JWT_USERID_EXTRACTED", null, "userId", id);
 
             return UUID.fromString(id);
 
         } catch (Exception e) {
-            logger.warn("Failed to extract user id: {}", e.getMessage());
+            LogUtil.warn(logger, "JWT_USERID_FAILED", e.getMessage());
             return null;
         }
     }
 
     @SuppressWarnings("unchecked")
     public Set<String> getRolesFromJwtToken(String token) {
-        Claims claims = Jwts.parser()
-                .verifyWith(key)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+        try {
+            Claims claims = Jwts.parser()
+                    .verifyWith(key)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
 
-        List<String> roles = claims.get("authorities", List.class);
-        if (roles == null) return Set.of();
-        return new HashSet<>(roles); // Roles extracted as Strings
+            List<String> roles = claims.get("authorities", List.class);
+            if (roles == null || roles.isEmpty()) {
+                LogUtil.warn(logger, "JWT_NO_ROLES", "No roles found inside JWT");
+
+                return Set.of();
+            }
+
+            Set<String> extractedRoles = new HashSet<>(roles);
+
+            LogUtil.info(logger, "JWT_ROLES_EXTRACTED", null, "roles", extractedRoles.toString());
+
+            return extractedRoles; // Roles extracted as Strings
+        } catch (Exception e) {
+            LogUtil.warn(logger, "JWT_ROLES_FAILED", e.getMessage(), "token", LogUtil.maskToken(token));
+        }
+        return Set.of();
     }
 
     // Extract JWT from cookie
@@ -118,6 +144,8 @@ public class JwtUtils {
 
         for (Cookie c : request.getCookies()) {
             if ("authToken".equals(c.getName())) {
+                LogUtil.info(logger, "JWT_FROM_COOKIE", "JWT extracted from cookie");
+
                 return c.getValue();
             }
         }
@@ -128,6 +156,8 @@ public class JwtUtils {
     public String extractJwtFromRequest(HttpServletRequest request) {
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (header != null && header.startsWith("Bearer ")) {
+            LogUtil.info(logger, "JWT_FROM_HEADER", "JWT extracted from Authorization header");
+
             return header.substring(7);
         }
         return null;

@@ -1,7 +1,9 @@
-package se.mojujo.userservice.security;
+package se.mojujo.userservice.service;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,9 +12,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
+import se.mojujo.userservice.exception.AuthorizationExpired;
 import se.mojujo.userservice.exception.InvalidCredentialsException;
+import se.mojujo.userservice.security.JwtUtils;
 import se.mojujo.userservice.security.dto.AuthResponseDTO;
 import se.mojujo.userservice.user.CustomUserDetails;
+import se.mojujo.userservice.user.dto.CustomUserResponseDTO;
+import se.mojujo.userservice.user.mapper.CustomUserMapper;
 import se.mojujo.userservice.util.LogUtil;
 
 import java.util.List;
@@ -24,10 +30,12 @@ public class AuthService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
+    private final CustomUserMapper customUserMapper;
 
-    public AuthService(AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
+    public AuthService(AuthenticationManager authenticationManager, JwtUtils jwtUtils, CustomUserMapper customUserMapper) {
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
+        this.customUserMapper = customUserMapper;
     }
 
     public AuthResponseDTO login(String username, String password) {
@@ -63,7 +71,7 @@ public class AuthService {
         }
     }
 
-    public void logout(HttpServletResponse response) {
+    public void logout(HttpServletResponse response, HttpServletRequest request) {
 
         LogUtil.info(logger, "LOGOUT_ATTEMPT", null);
 
@@ -74,6 +82,21 @@ public class AuthService {
         authCookie.setMaxAge(0);
         response.addCookie(authCookie);
 
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+            LogUtil.info(logger, "SESSION_INVALIDATED", null);
+        }
+
         LogUtil.info(logger, "LOGOUT_SUCCESS", null);
+    }
+
+    public CustomUserResponseDTO getCurrentUser(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated() ||
+                !(authentication.getPrincipal() instanceof CustomUserDetails customUserDetails)) {
+            throw new AuthorizationExpired("Authorization expired");
+        }
+
+        return customUserMapper.toResponseDTO(customUserDetails.getCustomUser());
     }
 }

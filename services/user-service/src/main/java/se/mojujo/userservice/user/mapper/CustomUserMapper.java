@@ -18,7 +18,7 @@ public class CustomUserMapper {
                 dto.username(),
                 dto.email(),
                 dto.password(),
-                dto.roles()
+                Set.of(UserRole.USER)
         );
     }
 

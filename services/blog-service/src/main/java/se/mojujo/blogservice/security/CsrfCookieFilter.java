@@ -12,6 +12,7 @@ import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.WebUtils;
+import se.mojujo.blogservice.util.LogUtil;
 
 import java.io.IOException;
 
@@ -41,7 +42,11 @@ public class CsrfCookieFilter extends OncePerRequestFilter {
                     cookie.setPath("/");
                     cookie.setHttpOnly(false);
                     response.addCookie(cookie);
-                    logger.debug("Added CSRF cookie with value: {}", token);
+
+                    LogUtil.info(logger,
+                            "CSRF_COOKIE_ADDED",
+                            "Added CSRF cookie",
+                            "token", token, "requestURI", request.getRequestURI());
                 }
             }
         }

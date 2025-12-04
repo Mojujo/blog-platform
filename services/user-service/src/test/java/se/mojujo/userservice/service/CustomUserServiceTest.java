@@ -7,18 +7,16 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import se.mojujo.userservice.exception.EmailAlreadyExistsException;
-import se.mojujo.userservice.exception.UserNotFoundException;
 import se.mojujo.userservice.exception.UsernameAlreadyExistsException;
 import se.mojujo.userservice.repository.CustomUserRepository;
+import se.mojujo.userservice.security.JwtUtils;
 import se.mojujo.userservice.user.CustomUser;
-import se.mojujo.userservice.user.CustomUserService;
 import se.mojujo.userservice.user.authority.UserRole;
 import se.mojujo.userservice.user.dto.CustomUserCreationDTO;
 import se.mojujo.userservice.user.dto.CustomUserResponseDTO;
 import se.mojujo.userservice.user.mapper.CustomUserMapper;
 
 import java.util.Set;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -34,6 +32,12 @@ public class CustomUserServiceTest {
 
     @Mock
     private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private AuditService auditService;
+
+    @Mock
+    private JwtUtils jwtUtils;
 
     @InjectMocks
     private CustomUserService customUserService;
@@ -67,6 +71,7 @@ public class CustomUserServiceTest {
         assertEquals(dto.email(), response.email());
         assertTrue(response.roles().contains("ROLE_USER"));
         verify(customUserRepository, times(1)).save(entity);
+        verify(auditService, times(1)).sendAuditEvent(eq("USER_CREATED"), anyMap());
     }
 
     @Test
