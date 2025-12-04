@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import se.mojujo.blogservice.exception.BlogPostAccessDeniedException;
@@ -156,6 +157,12 @@ public class BlogPostService {
         Pageable pageable = PageRequest.of(page, size);
         Page<BlogPost> posts = blogPostRepository.findAllByUserIdOrderByCreatedDateDesc(user.getUserId(), pageable);
 
+        return posts.map(blogPostMapper::toResponse);
+    }
+
+    public Page<BlogPostResponseDTO> getAllPosts(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
+        Page<BlogPost> posts = blogPostRepository.findAll(pageable);
         return posts.map(blogPostMapper::toResponse);
     }
 }
