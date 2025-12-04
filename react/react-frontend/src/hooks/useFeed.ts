@@ -20,7 +20,7 @@ export const useFeed = (pageSize: number = 10) => {
         setLoading(true);
 
         try {
-            const response = await apiClient.get(`/blog/feed?page=${nextPage}&size=${pageSize}`);
+            const response = await apiClient.get(`/post/feed?page=${nextPage}&size=${pageSize}`);
             const data: Post[] = response.data.content
             setPosts(prev => nextPage === 0 ? data : [...prev, ...data]);
             setHasMore(!response.data.last);
