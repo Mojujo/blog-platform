@@ -1,11 +1,12 @@
 import { useFeed } from "../hooks/useFeed"
+import styles from "./Home.module.css"
 
 export default function Home() {
     const { posts, loading, fetchPosts, page, hasMore} = useFeed();
 
     return (
         <>
-        <div>
+        <div className={styles.feedContainer}>
             <h1>Recent Posts</h1>
 
             {posts.length === 0 && !loading && <p>No posts yet</p> }
@@ -16,7 +17,7 @@ export default function Home() {
                         <h3>{post.title}</h3>
                         <p>{post.content}</p>
                         <small>
-                            By {post.author} - {new Date(post.createdDate).toLocaleString()}
+                            By {post.author} - {new Date(post.createdDate).toLocaleString()} 
                         </small>
                     </li>
                 ))}
@@ -31,3 +32,4 @@ export default function Home() {
         </>
     )
 }
+// TODO ADD AUTHOR TO POSTS

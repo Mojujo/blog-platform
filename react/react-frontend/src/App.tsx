@@ -4,6 +4,7 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import NavHeader from './components/NavHeader';
+import Profile from './pages/Profile';
 
 export type Screen = "home" | "login" | "register" | "profile";
 
@@ -18,6 +19,7 @@ function App() {
         {screen === "home" && <Home />}
         {screen === "login" && <Login setScreen={setScreen} />}
         {screen === "register" && <Register setScreen={setScreen} />}
+        {screen === "profile" && <Profile setScreen={setScreen} />}
       </main>
     </>
   )

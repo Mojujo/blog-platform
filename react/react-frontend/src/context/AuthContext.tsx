@@ -12,6 +12,7 @@ type AuthContextType = {
     isLoggedIn: boolean;
     login: (username: string, password: string) => Promise<boolean>;
     logout: () => void;
+    authLoaded: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -19,6 +20,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const [user, setUser] = useState<User | null>(null);
+    const [authLoaded, setAuthLoaded] = useState(false);
 
     // Axios interceptor to automatically attach CSRF tokens
     useEffect(() => {
@@ -58,7 +60,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 setUser(null);
             } else {
                 console.error("Failed to refresh user", err)
-            }
+            } 
+        } finally {
+            setAuthLoaded(true);
         }
     };
 
@@ -89,13 +93,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const logout = async (): Promise<void> => {
 
         try {
+            await apiClient.get("/user/csrf");
+
             await apiClient.post("auth/logout");
 
         } catch (err: any) {
             console.error("Logout Failed", err)
+        } finally {
+            setUser(null);
         }
 
-        setUser(null);
+        
     };
 
     return (
@@ -103,7 +111,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             user,
             isLoggedIn: user !== null,
             login,
-            logout
+            logout,
+            authLoaded
         }}>
             {children}
         </AuthContext.Provider>
