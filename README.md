@@ -30,20 +30,27 @@ The microservice communicates through an API-Gateway to ensure optimal security 
 **Service Structure**
 
 blog-platform/services/
+    audit-service/
+        │── config         # Configurations
+        │── repository     # DAO layer (Spring Data PostgreSQL)
+        │── listener       # RabbitMQ Listener
+        │── model          # PostgreSQL entities
+        │── util           # Utility methods
+    
     blog-service/
     user-service/
-    audit-service/
         │── config         # Configurations
         │── controller     # REST controllers
         │── exceptions     # Global Exception Handler
-        │── Repository     # DAO layer (Spring Data PostgreSQL)
-        │─┐── Model        # PostgreSQL entities
+        │── repository     # DAO layer (Spring Data PostgreSQL)
+        │─┐── model        # PostgreSQL entities
         │ │── dto          # Data Transfer Objects
         │ └── mapper       # DTO ↔ Entity mappers
-        │── Security       # JWT Utility & Filter
-        │── Service        # Business logic
+        │── security       # JWT Utility & Filter
+        │── service        # Business logic
+        │── util           # Utility methods
         
-blog-platform/react
+blog-platform/react/react-frontend
 ```
 
 ## Technologies
