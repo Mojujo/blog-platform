@@ -1,0 +1,21 @@
+.formContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.formInput {
+    display: inherit;
+    flex-direction: column;
+
+    width: 50%;
+}
+
+.formInput input {
+    margin: 10px 0 10px 0;
+}
+
+.formInput textarea {
+    resize: none;
+}
