@@ -1,8 +1,33 @@
+import { useFeed } from "../hooks/useFeed"
+
 export default function Home() {
+    const { posts, loading, fetchPosts, page, hasMore} = useFeed();
 
     return (
         <>
-        <h1>Placeholder</h1>
+        <div>
+            <h1>Recent Posts</h1>
+
+            {posts.length === 0 && !loading && <p>No posts yet</p> }
+
+            <ul>
+                {posts.map(post => (
+                    <li key={post.id}>
+                        <h3>{post.title}</h3>
+                        <p>{post.content}</p>
+                        <small>
+                            By {post.author} - {new Date(post.createdDate).toLocaleString()}
+                        </small>
+                    </li>
+                ))}
+            </ul>
+
+            {loading && <p>Loading... </p>}
+
+            {hasMore && !loading && (
+                <button onClick={() => fetchPosts(page + 1)}>Load more</button>
+            )}
+        </div>
         </>
     )
 }
