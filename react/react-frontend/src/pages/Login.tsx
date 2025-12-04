@@ -1,7 +1,9 @@
 import { useState } from "react"
 import { useAuth } from "../context/AuthContext"
+import { Screen } from "../App";
+import styles from "./Login.module.css"
 
-export default function Login() {
+export default function Login({ setScreen }: { setScreen: (s: Screen) => void }) {
 
     const { login } = useAuth();
 
@@ -21,7 +23,7 @@ export default function Login() {
 
     return (
         <>
-            <div>
+            <div className={styles.loginContainer}>
                 <h2>Login</h2>
                 <input
                     placeholder="Username"
@@ -33,8 +35,15 @@ export default function Login() {
                     value={password}
                     onChange={(string) => setPassword(string.target.value)}
                 />
-                <button onClick={handleLogin}>Login</button>
+                <button onClick={async () => {
+                    await handleLogin();
+                    setScreen("home");
+                }}>Login</button>
                 <p>{message}</p>
+            </div>
+            <div className={styles.forwardRegister}>
+                <h3>No account?</h3>
+                <button onClick={() => setScreen("register")}>Register</button>
             </div>
         </>
     )

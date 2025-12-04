@@ -1,0 +1,35 @@
+.loginContainer {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    margin-bottom: 10px;
+}
+
+.loginContainer input {
+    margin: 5px 0 5px 0;
+}
+
+.loginContainer button {
+    width: 80px;
+    height: 40px;
+    font-size: 20px;
+    font-weight: bold;
+
+    margin-top: 10px;
+}
+
+.forwardRegister {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.forwardRegister h3 {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.forwardRegister button {
+    margin-left: 5px;
+}

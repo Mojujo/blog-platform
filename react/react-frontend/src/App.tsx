@@ -12,13 +12,13 @@ function App() {
 
   return (
     <>
-    <NavHeader setScreen={setScreen} />
+      <NavHeader setScreen={setScreen} />
 
-    <main>
-      {screen === "home" && <Home />}
-      {screen === "login" && <Login />}
-      {screen === "register" && <Register /> }
-    </main>
+      <main>
+        {screen === "home" && <Home />}
+        {screen === "login" && <Login setScreen={setScreen} />}
+        {screen === "register" && <Register setScreen={setScreen} />}
+      </main>
     </>
   )
 }
