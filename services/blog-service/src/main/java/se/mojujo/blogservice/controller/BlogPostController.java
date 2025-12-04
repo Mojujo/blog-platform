@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -67,5 +68,18 @@ public class BlogPostController {
             @RequestParam(defaultValue = "10") int size) {
 
         return blogPostService.getAllPostsOrdered(authentication, page, size);
+    }
+
+    // Fetch all posts
+    @GetMapping("/feed")
+    public ResponseEntity<Page<BlogPostResponseDTO>> getFeed(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        Page<BlogPostResponseDTO> posts = blogPostService.getAllPosts(page, size);
+
+        LogUtil.info(logger, "FEED_FETCHED", null, "posts", posts.getTotalElements(), posts.getTotalPages());
+
+        return ResponseEntity.ok(posts);
     }
 }

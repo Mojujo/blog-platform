@@ -25,11 +25,5 @@ public record CustomUserCreationDTO(
                 message = "Password must contain at least one uppercase, one lowercase, one digit, and one special character"
         )
         @Size(max = 40, message = "Maximum length of password exceeded")
-        String password,
-
-        // TODO @AssertTrue acceptAppTerms
-
-        @Size(min = 1)
-        @NotNull
-        Set<UserRole> roles
+        String password
 ) {}

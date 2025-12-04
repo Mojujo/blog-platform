@@ -52,9 +52,9 @@ public class AppSecurityConfig {
 
                 // Route Authorization
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/csrf", "/register", "/auth/**").permitAll()
+                        .requestMatchers("/user/register", "user/csrf", "/auth/**").permitAll()
                         .requestMatchers("/admin/**", "/tools").hasRole("ADMIN")
-                        .requestMatchers("/profile").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("user/profile").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
                 )
 

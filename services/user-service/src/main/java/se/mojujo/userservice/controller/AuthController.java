@@ -1,10 +1,12 @@
 package se.mojujo.userservice.controller;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import se.mojujo.userservice.service.AuthService;
 import se.mojujo.userservice.security.dto.AuthResponseDTO;
@@ -47,13 +49,13 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletResponse response) {
-        authService.logout(response);
+    public ResponseEntity<?> logout(HttpServletResponse response, HttpServletRequest request) {
+        authService.logout(response, request);
         return ResponseEntity.ok(Map.of("message", "You've been logged out"));
     }
 
     @GetMapping("/me")
-    public CustomUserResponseDTO me() {
-        return authService.getCurrentUser();
+    public CustomUserResponseDTO me(Authentication authentication) {
+        return authService.getCurrentUser(authentication);
     }
 }

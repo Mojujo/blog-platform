@@ -10,9 +10,9 @@ spring:
             - id: user-service
               uri: ${USER_SERVICE_URI:http://localhost:8080}
               predicates:
-                - Path=/auth/**, /register, /profile
+                - Path=/auth/**, /user/**
 
             - id: blog-service
               uri: ${BLOG_SERVICE_URI:http://localhost:8081}
               predicates:
-                - Path=/post/**
+                - Path=/post/**, /post

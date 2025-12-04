@@ -1,7 +1,9 @@
 package se.mojujo.userservice.service;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,7 +11,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import se.mojujo.userservice.exception.AuthorizationExpired;
 import se.mojujo.userservice.exception.InvalidCredentialsException;
@@ -70,7 +71,7 @@ public class AuthService {
         }
     }
 
-    public void logout(HttpServletResponse response) {
+    public void logout(HttpServletResponse response, HttpServletRequest request) {
 
         LogUtil.info(logger, "LOGOUT_ATTEMPT", null);
 
@@ -81,16 +82,21 @@ public class AuthService {
         authCookie.setMaxAge(0);
         response.addCookie(authCookie);
 
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+            LogUtil.info(logger, "SESSION_INVALIDATED", null);
+        }
+
         LogUtil.info(logger, "LOGOUT_SUCCESS", null);
     }
 
-    public CustomUserResponseDTO getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
+    public CustomUserResponseDTO getCurrentUser(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated() ||
+                !(authentication.getPrincipal() instanceof CustomUserDetails customUserDetails)) {
             throw new AuthorizationExpired("Authorization expired");
         }
 
-        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
         return customUserMapper.toResponseDTO(customUserDetails.getCustomUser());
     }
 }
