@@ -26,11 +26,13 @@ export default function Login({ setScreen }: { setScreen: (s: Screen) => void })
             <div className={styles.loginContainer}>
                 <h2>Login</h2>
                 <input
+                    id="username"
                     placeholder="Username"
                     value={username}
                     onChange={(string) => setUsername(string.target.value)}
                 />
                 <input
+                    id="password"
                     placeholder="Password"
                     value={password}
                     onChange={(string) => setPassword(string.target.value)}

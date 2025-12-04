@@ -1,0 +1,20 @@
+.registerContainer {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    margin-bottom: 10px;
+}
+
+.registerContainer input {
+    margin: 5px 0 5px 0;
+}
+
+.registerContainer button {
+    width: 120px;
+    height: 40px;
+    font-size: 20px;
+    font-weight: bold;
+
+    margin-top: 10px;
+}

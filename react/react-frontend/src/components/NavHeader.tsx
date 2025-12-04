@@ -9,15 +9,21 @@ export default function NavHeader({ setScreen }: { setScreen: (s: Screen) => voi
         <>
             <header className={styles.centerHeader}>
                 <nav className={styles.navContainer}>
-                    <button
-                        className={styles.navButton}
-                        onClick={() => setScreen("home")}>
-                        <img src="./assets/home.svg" alt="" className={styles.homeImage} />
-                    </button>
+                    <div className={styles.homeContainer}>
 
-                    <h2>
-                        Min fina blog-platform
-                    </h2>
+                        <button
+                            className={styles.navButton}
+                            onClick={() => setScreen("home")}>
+                            <img src="./assets/home.svg" alt="" className={styles.homeImage} />
+                        </button>
+                        <h2>
+                            Teknikbloggen
+                        </h2>
+
+                    </div>
+
+
+
 
                     <div className={styles.accessButtons}>
                         {user && (
