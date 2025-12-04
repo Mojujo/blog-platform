@@ -3,8 +3,6 @@ package se.mojujo.userservice.integration;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -17,11 +15,8 @@ import se.mojujo.userservice.repository.CustomUserRepository;
 import se.mojujo.userservice.security.JwtUtils;
 import se.mojujo.userservice.service.AuditService;
 import se.mojujo.userservice.service.CustomUserService;
-import se.mojujo.userservice.user.authority.UserRole;
 import se.mojujo.userservice.user.dto.CustomUserCreationDTO;
 import se.mojujo.userservice.user.dto.CustomUserResponseDTO;
-
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyMap;
@@ -65,8 +60,7 @@ public class CustomUserServiceIntegrationTest {
         CustomUserCreationDTO dto = new CustomUserCreationDTO(
                 "oscar_integration",
                 "oscar@integration.com",
-                "Password1!",
-                Set.of(UserRole.USER)
+                "Password1!"
         );
 
         CustomUserResponseDTO response = customUserService.createUser(dto);
@@ -84,8 +78,7 @@ public class CustomUserServiceIntegrationTest {
         CustomUserCreationDTO dto = new CustomUserCreationDTO(
                 "integration_user2",
                 "integration2@example.com",
-                "Password1!",
-                Set.of(UserRole.USER)
+                "Password1!"
         );
 
         customUserService.createUser(dto);
