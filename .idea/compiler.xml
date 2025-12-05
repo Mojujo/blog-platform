@@ -9,11 +9,11 @@
         <module name="user-service" />
         <module name="blog-service" />
         <module name="audit-service" />
-        <module name="notification-service" />
         <module name="gateway-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="notification-service" target="21" />
       <module name="shared" target="21" />
     </bytecodeTargetLevel>
   </component>

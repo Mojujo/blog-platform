@@ -25,7 +25,6 @@
         <module>services/user-service</module>
         <module>services/blog-service</module>
         <module>services/audit-service</module>
-        <module>services/notification-service</module>
         <module>services/gateway-service</module>
     </modules>
 
