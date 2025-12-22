@@ -24,10 +24,8 @@ import se.mojujo.blogservice.util.LogUtil;
 
 import java.time.Instant;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class BlogPostService {
@@ -62,7 +60,7 @@ public class BlogPostService {
 
         LogUtil.info(logger, "BLOG_CREATE_START", null, "userId", user.getUserId());
 
-        BlogPost post = blogPostMapper.toEntity(dto, user.getUserId());
+        BlogPost post = blogPostMapper.toEntity(dto, user.getUserId(), user.getUsername());
         post.setCreatedDate(Instant.now());
 
         BlogPost savedPost = blogPostRepository.save(post);

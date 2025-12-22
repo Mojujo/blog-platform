@@ -7,6 +7,7 @@ public record BlogPostResponseDTO(
 
         UUID id,
         UUID userId,
+        String authorUsername,
         String title,
         String content,
         String imageUrl,
