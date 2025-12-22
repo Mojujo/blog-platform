@@ -62,7 +62,7 @@ public class BlogPostService {
 
         LogUtil.info(logger, "BLOG_CREATE_START", null, "userId", user.getUserId());
 
-        BlogPost post = blogPostMapper.toEntity(dto, user.getUserId());
+        BlogPost post = blogPostMapper.toEntity(dto, user.getUserId(), user.getUsername());
         post.setCreatedDate(Instant.now());
 
         BlogPost savedPost = blogPostRepository.save(post);

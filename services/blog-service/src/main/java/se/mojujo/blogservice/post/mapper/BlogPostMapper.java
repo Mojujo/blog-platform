@@ -10,9 +10,10 @@ import java.util.UUID;
 @Component
 public class BlogPostMapper {
 
-    public BlogPost toEntity(BlogPostCreationDTO dto, UUID userId) {
+    public BlogPost toEntity(BlogPostCreationDTO dto, UUID userId, String author) {
         return new BlogPost(
                 userId,
+                author,
                 dto.title(),
                 dto.content(),
                 dto.imageUrl()
@@ -23,6 +24,7 @@ public class BlogPostMapper {
         return new BlogPostResponseDTO(
                 blogPost.getId(),
                 blogPost.getUserId(),
+                blogPost.getAuthor(),
                 blogPost.getTitle(),
                 blogPost.getContent(),
                 blogPost.getImageUrl(),
