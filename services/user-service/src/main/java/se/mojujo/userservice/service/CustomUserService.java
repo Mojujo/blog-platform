@@ -86,6 +86,11 @@ public class CustomUserService {
         user.setUsername(newUsername);
         customUserRepository.save(user);
 
+        LogUtil.info(logger,
+                "USERNAME_CHANGED",
+                "Username changed successfully",
+                "userId", user.getId(), "New Username", newUsername);
+
         // Publish event
         rabbitService.sendUsernameChangedEvent(userId, newUsername);
     }
