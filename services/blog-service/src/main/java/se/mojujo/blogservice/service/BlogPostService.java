@@ -24,10 +24,8 @@ import se.mojujo.blogservice.util.LogUtil;
 
 import java.time.Instant;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class BlogPostService {
