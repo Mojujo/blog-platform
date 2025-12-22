@@ -16,7 +16,7 @@ public class BlogPost {
 
     @Column(nullable = false)
     private UUID userId; // Logical service reference
-    private String author;
+    private String author; // TODO EVENT DRIVEN USERNAME CHANGES
     private String title;
 
     @Column(columnDefinition = "TEXT", nullable = false)
