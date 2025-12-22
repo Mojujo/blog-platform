@@ -16,7 +16,7 @@ public class BlogPost {
 
     @Column(nullable = false)
     private UUID userId; // Logical service reference
-    private String author; // TODO EVENT DRIVEN USERNAME CHANGES
+    private String authorUsername; // TODO EVENT DRIVEN USERNAME CHANGES
     private String title;
 
     @Column(columnDefinition = "TEXT", nullable = false)
@@ -32,9 +32,9 @@ public class BlogPost {
     public BlogPost() {}
 
     // Generic Constructor for Service & Mapper
-    public BlogPost(UUID userId, String author, String title, String content, String imageUrl) {
+    public BlogPost(UUID userId, String authorUsername, String title, String content, String imageUrl) {
         this.userId = userId;
-        this.author = author;
+        this.authorUsername = authorUsername;
         this.title = title;
         this.content = content;
         this.imageUrl = imageUrl;
@@ -64,12 +64,12 @@ public class BlogPost {
         this.userId = userId;
     }
 
-    public String getAuthor() {
-        return author;
+    public String getAuthorUsername() {
+        return authorUsername;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setAuthorUsername(String author) {
+        this.authorUsername = author;
     }
 
     public String getTitle() {
