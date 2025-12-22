@@ -4,18 +4,20 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.mojujo.userservice.config.RabbitConfig;
+import se.mojujo.userservice.user.dto.UsernameChangedEvent;
 
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
-public class AuditService {
+public class RabbitService {
 
     private final RabbitTemplate rabbitTemplate;
 
     @Autowired
-    public AuditService(RabbitTemplate rabbitTemplate) {
+    public RabbitService(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
     }
 
@@ -29,6 +31,16 @@ public class AuditService {
                 RabbitConfig.AUDIT_EXCHANGE,
                 RabbitConfig.AUDIT_ROUTING_KEY,
                 payload
+        );
+    }
+
+    public void sendUsernameChangedEvent(UUID userId, String newUsername) {
+        UsernameChangedEvent event = new UsernameChangedEvent(userId, newUsername);
+
+        rabbitTemplate.convertAndSend(
+                RabbitConfig.USERNAME_CHANGED_EXCHANGE,
+                RabbitConfig.USERNAME_CHANGED_ROUTING_KEY,
+                event
         );
     }
 }

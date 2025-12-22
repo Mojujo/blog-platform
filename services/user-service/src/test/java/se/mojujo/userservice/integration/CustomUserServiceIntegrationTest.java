@@ -13,7 +13,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import se.mojujo.userservice.repository.CustomUserRepository;
 import se.mojujo.userservice.security.JwtUtils;
-import se.mojujo.userservice.service.AuditService;
+import se.mojujo.userservice.service.RabbitService;
 import se.mojujo.userservice.service.CustomUserService;
 import se.mojujo.userservice.user.dto.CustomUserCreationDTO;
 import se.mojujo.userservice.user.dto.CustomUserResponseDTO;
@@ -50,7 +50,7 @@ public class CustomUserServiceIntegrationTest {
     private CustomUserRepository customUserRepository;
 
     @MockitoBean
-    private AuditService auditService;
+    private RabbitService rabbitService;
 
     @MockitoBean
     private JwtUtils jwtUtils;
@@ -70,7 +70,7 @@ public class CustomUserServiceIntegrationTest {
         assertEquals("oscar@integration.com", response.email());
         assertTrue(response.roles().contains("ROLE_USER"));
         assertEquals(1,customUserRepository.count());
-        verify(auditService).sendAuditEvent(eq("USER_CREATED"), anyMap());
+        verify(rabbitService).sendAuditEvent(eq("USER_CREATED"), anyMap());
     }
 
     @Test

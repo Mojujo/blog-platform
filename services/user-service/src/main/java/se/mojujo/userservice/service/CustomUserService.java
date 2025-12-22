@@ -7,17 +7,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import se.mojujo.userservice.exception.EmailAlreadyExistsException;
+import se.mojujo.userservice.exception.UserNotFoundException;
 import se.mojujo.userservice.exception.UsernameAlreadyExistsException;
 import se.mojujo.userservice.repository.CustomUserRepository;
 import se.mojujo.userservice.user.CustomUser;
 import se.mojujo.userservice.user.authority.UserRole;
 import se.mojujo.userservice.user.dto.CustomUserCreationDTO;
 import se.mojujo.userservice.user.dto.CustomUserResponseDTO;
+import se.mojujo.userservice.user.dto.UsernameChangedEvent;
 import se.mojujo.userservice.user.mapper.CustomUserMapper;
 import se.mojujo.userservice.util.LogUtil;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,14 +31,14 @@ public class CustomUserService {
     private final CustomUserRepository customUserRepository;
     private final PasswordEncoder passwordEncoder;
     private final CustomUserMapper customUserMapper;
-    private final AuditService auditService;
+    private final RabbitService rabbitService;
 
     @Autowired
-    public CustomUserService(CustomUserRepository customUserRepository, PasswordEncoder passwordEncoder, CustomUserMapper customUserMapper, AuditService auditService) {
+    public CustomUserService(CustomUserRepository customUserRepository, PasswordEncoder passwordEncoder, CustomUserMapper customUserMapper, RabbitService rabbitService) {
         this.customUserRepository = customUserRepository;
         this.passwordEncoder = passwordEncoder;
         this.customUserMapper = customUserMapper;
-        this.auditService = auditService;
+        this.rabbitService = rabbitService;
     }
 
     @Transactional
@@ -70,8 +73,20 @@ public class CustomUserService {
         auditData.put("email", savedUser.getEmail());
         auditData.put("roles", savedUser.getRoles().stream().map(UserRole::getRoleName).collect(Collectors.toSet()));
 
-        auditService.sendAuditEvent("USER_CREATED", auditData);
+        rabbitService.sendAuditEvent("USER_CREATED", auditData);
 
         return customUserMapper.toResponseDTO(savedUser);
+    }
+
+    @Transactional
+    public void changeUsername(UUID userId, String newUsername) {
+        CustomUser user = customUserRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        user.setUsername(newUsername);
+        customUserRepository.save(user);
+
+        // Publish event
+        rabbitService.sendUsernameChangedEvent(userId, newUsername);
     }
 }
