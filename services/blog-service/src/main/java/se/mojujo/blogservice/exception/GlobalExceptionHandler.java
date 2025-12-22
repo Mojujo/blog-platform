@@ -20,6 +20,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
             BlogPostAccessDeniedException.class,
             BlogPostNotFoundException.class,
+            BlogPostUpdateException.class,
             InvalidBlogPostException.class,
             UnauthorizedUserException.class
     })

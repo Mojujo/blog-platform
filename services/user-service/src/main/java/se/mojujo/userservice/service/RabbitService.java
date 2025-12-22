@@ -4,7 +4,6 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.mojujo.userservice.config.RabbitConfig;
-import se.mojujo.userservice.user.dto.UsernameChangedEvent;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -35,12 +34,14 @@ public class RabbitService {
     }
 
     public void sendUsernameChangedEvent(UUID userId, String newUsername) {
-        UsernameChangedEvent event = new UsernameChangedEvent(userId, newUsername);
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("userId", userId);
+        payload.put("newUsername", newUsername);
 
         rabbitTemplate.convertAndSend(
                 RabbitConfig.USERNAME_CHANGED_EXCHANGE,
                 RabbitConfig.USERNAME_CHANGED_ROUTING_KEY,
-                event
+                payload
         );
     }
 }

@@ -10,18 +10,23 @@ import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 @Configuration
+@Profile("!test")
 public class RabbitConfig {
 
     public static final String AUDIT_QUEUE = "audit-queue";
     public static final String NOTIFICATION_QUEUE = "notification-queue";
+    public static final String USERNAME_CHANGED_QUEUE = "username-changed-queue";
 
     public static final String AUDIT_EXCHANGE = "audit-exchange";
     public static final String NOTIFICATION_EXCHANGE = "notification-exchange";
+    public static final String USERNAME_CHANGED_EXCHANGE = "username-changed-exchange";
 
     public static final String AUDIT_ROUTING_KEY = "audit.routing";
     public static final String NOTIFICATION_ROUTING_KEY = "notification.routing";
+    public static final String USERNAME_CHANGED_ROUTING_KEY = "username-changed-routing";
 
     @Bean
     public Queue auditQueue() {
@@ -31,6 +36,11 @@ public class RabbitConfig {
     @Bean
     public Queue notificationQueue() {
         return new Queue(NOTIFICATION_QUEUE, true);
+    }
+
+    @Bean
+    public Queue usernameChangedQueue() {
+        return new Queue(USERNAME_CHANGED_QUEUE, true);
     }
 
     @Bean
@@ -44,6 +54,11 @@ public class RabbitConfig {
     }
 
     @Bean
+    public DirectExchange usernameChangedExchange() {
+        return new DirectExchange(USERNAME_CHANGED_EXCHANGE);
+    }
+
+    @Bean
     public Binding auditBinding(Queue auditQueue, DirectExchange auditExchange) {
         return BindingBuilder.bind(auditQueue).to(auditExchange).with(AUDIT_ROUTING_KEY);
     }
@@ -51,6 +66,11 @@ public class RabbitConfig {
     @Bean
     public Binding notificationBinding(Queue notificationQueue, DirectExchange notificationExchange) {
         return BindingBuilder.bind(notificationQueue).to(notificationExchange).with(NOTIFICATION_ROUTING_KEY);
+    }
+
+    @Bean
+    public Binding usernameChangedBinding(Queue usernameChangedQueue, DirectExchange usernameChangedExchange) {
+        return BindingBuilder.bind(usernameChangedQueue).to(usernameChangedExchange).with(USERNAME_CHANGED_ROUTING_KEY);
     }
 
     @Bean

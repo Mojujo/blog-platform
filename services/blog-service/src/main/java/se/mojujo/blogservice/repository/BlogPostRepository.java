@@ -13,4 +13,5 @@ import java.util.UUID;
 public interface BlogPostRepository extends JpaRepository<BlogPost, UUID> {
 
     Page<BlogPost> findAllByUserIdOrderByCreatedDateDesc(UUID userId, Pageable pageable);
+    List<BlogPost> findAllByUserId(UUID userId);
 }

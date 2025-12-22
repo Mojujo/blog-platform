@@ -14,7 +14,6 @@ import se.mojujo.userservice.user.CustomUser;
 import se.mojujo.userservice.user.authority.UserRole;
 import se.mojujo.userservice.user.dto.CustomUserCreationDTO;
 import se.mojujo.userservice.user.dto.CustomUserResponseDTO;
-import se.mojujo.userservice.user.dto.UsernameChangedEvent;
 import se.mojujo.userservice.user.mapper.CustomUserMapper;
 import se.mojujo.userservice.util.LogUtil;
 

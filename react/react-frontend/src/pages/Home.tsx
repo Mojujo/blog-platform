@@ -17,7 +17,7 @@ export default function Home() {
                         <h3>{post.title}</h3>
                         <p>{post.content}</p>
                         <small>
-                            By {post.author} - {new Date(post.createdDate).toLocaleString()} 
+                            By {post.authorUsername} - {new Date(post.createdDate).toLocaleString()} 
                         </small>
                     </li>
                 ))}
