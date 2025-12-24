@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import se.mojujo.userservice.exception.EmailAlreadyExistsException;
+import se.mojujo.userservice.exception.InvalidCredentialsException;
 import se.mojujo.userservice.exception.UserNotFoundException;
 import se.mojujo.userservice.exception.UsernameAlreadyExistsException;
 import se.mojujo.userservice.repository.CustomUserRepository;
@@ -92,5 +93,32 @@ public class CustomUserService {
 
         // Publish event
         rabbitService.sendUsernameChangedEvent(userId, newUsername);
+    }
+
+    @Transactional
+    public void changeEmail(UUID userId, String newEmail) {
+        CustomUser user =  customUserRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        user.setEmail(newEmail);
+        customUserRepository.save(user);
+
+        LogUtil.info(logger,
+                "EMAIL_CHANGED",
+                "Email changed successfully",
+                "userId", user.getId(), "New Email", newEmail);
+    }
+
+    @Transactional
+    public void changePassword(UUID userId, String oldPassword, String newPassword) {
+        CustomUser user = customUserRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new InvalidCredentialsException("Invalid credentials");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        customUserRepository.save(user);
     }
 }
