@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.*;
 import se.mojujo.userservice.user.CustomUser;
 import se.mojujo.userservice.user.CustomUserDetails;
 import se.mojujo.userservice.service.CustomUserService;
+import se.mojujo.userservice.user.dto.ChangeUsernameRequest;
 import se.mojujo.userservice.user.dto.CustomUserCreationDTO;
 import se.mojujo.userservice.user.dto.CustomUserResponseDTO;
 import se.mojujo.userservice.user.mapper.CustomUserMapper;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/user")
@@ -34,7 +37,7 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<CustomUserResponseDTO> getUserProfile(Authentication authentication) {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         CustomUser customUser = userDetails.getCustomUser();
@@ -48,5 +51,17 @@ public class UserController {
     @GetMapping("/csrf")
     public void getCsrfToken() {
         // No body needed; CsrfCookieFilter will set the XSRF-TOKEN cookie for frontend use
+    }
+
+    @PatchMapping("/username")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public ResponseEntity<Void> changeUsername(@Valid @RequestBody ChangeUsernameRequest request, Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        CustomUser customUser = userDetails.getCustomUser();
+        UUID userId = customUser.getId();
+
+        customUserService.changeUsername(userId, request.newUsername());
+
+        return ResponseEntity.noContent().build();
     }
 }
