@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import se.mojujo.userservice.user.CustomUser;
 import se.mojujo.userservice.user.CustomUserDetails;
 import se.mojujo.userservice.service.CustomUserService;
+import se.mojujo.userservice.user.dto.ChangeEmailRequest;
 import se.mojujo.userservice.user.dto.ChangeUsernameRequest;
 import se.mojujo.userservice.user.dto.CustomUserCreationDTO;
 import se.mojujo.userservice.user.dto.CustomUserResponseDTO;
@@ -62,6 +63,17 @@ public class UserController {
 
         customUserService.changeUsername(userId, request.newUsername());
 
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/email")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public ResponseEntity<Void> changeEmail(@Valid @RequestBody ChangeEmailRequest request, Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        CustomUser customUser = userDetails.getCustomUser();
+        UUID userId = customUser.getId();
+
+        customUserService.changeEmail(userId, request.newEmail());
         return ResponseEntity.noContent().build();
     }
 }

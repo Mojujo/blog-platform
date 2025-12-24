@@ -112,6 +112,14 @@ public class CustomUserService {
         CustomUser user = customUserRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
+        if (newEmail.equals(user.getEmail())) {
+            return;
+        }
+
+        if (customUserRepository.existsByEmail(newEmail)) {
+            throw new EmailAlreadyExistsException("Email already taken");
+        }
+
         user.setEmail(newEmail);
         customUserRepository.save(user);
 
@@ -119,6 +127,11 @@ public class CustomUserService {
                 "EMAIL_CHANGED",
                 "Email changed successfully",
                 "userId", user.getId(), "New Email", newEmail);
+
+        rabbitService.sendAuditEvent(
+                "EMAIL_CHANGED",
+                Map.of("userId", user.getId(), "newEmail", newEmail)
+        );
     }
 
     @Transactional
