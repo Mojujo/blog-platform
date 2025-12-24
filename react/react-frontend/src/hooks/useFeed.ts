@@ -6,7 +6,7 @@ export interface Post {
     title: string;
     content: string;
     createdDate: string;
-    author: string;
+    authorUsername: string;
 }
 // TODO AUTHOR
 export const useFeed = (pageSize: number = 10) => {

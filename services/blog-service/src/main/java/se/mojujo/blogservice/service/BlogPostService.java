@@ -24,6 +24,7 @@ import se.mojujo.blogservice.util.LogUtil;
 
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -114,6 +115,13 @@ public class BlogPostService {
         LogUtil.info(logger, "BLOG_UPDATE_SUCCESS", null, "postId", postId, "userId", user.getUserId());
 
         return blogPostMapper.toResponse(savedPost);
+    }
+
+    public void updatePostAuthor(UUID userId, String newUsername) {
+        List<BlogPost> posts = blogPostRepository.findAllByUserId(userId);
+
+        posts.forEach(post -> post.setAuthorUsername(newUsername));
+        blogPostRepository.saveAll(posts);
     }
 
     public void deletePost(Authentication authentication, UUID postId) {

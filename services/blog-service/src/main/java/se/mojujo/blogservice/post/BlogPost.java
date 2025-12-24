@@ -68,6 +68,10 @@ public class BlogPost {
         return authorUsername;
     }
 
+    public void setAuthorUsername(String authorUsername) {
+        this.authorUsername = authorUsername;
+    }
+
     public String getTitle() {
         return title;
     }
