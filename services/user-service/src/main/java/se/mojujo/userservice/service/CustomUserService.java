@@ -145,5 +145,13 @@ public class CustomUserService {
 
         user.setPassword(passwordEncoder.encode(newPassword));
         customUserRepository.save(user);
+
+        LogUtil.info(logger,
+                "PASSWORD_CHANGED",
+                "Password changed successfully",
+                "userId", user.getId());
+
+        rabbitService.sendAuditEvent("PASSWORD_CHANGED",
+                Map.of("userId", user.getId()));
     }
 }

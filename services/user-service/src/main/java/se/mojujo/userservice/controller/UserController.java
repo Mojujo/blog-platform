@@ -1,5 +1,6 @@
 package se.mojujo.userservice.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,10 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import se.mojujo.userservice.user.CustomUser;
 import se.mojujo.userservice.user.CustomUserDetails;
 import se.mojujo.userservice.service.CustomUserService;
-import se.mojujo.userservice.user.dto.ChangeEmailRequest;
-import se.mojujo.userservice.user.dto.ChangeUsernameRequest;
-import se.mojujo.userservice.user.dto.CustomUserCreationDTO;
-import se.mojujo.userservice.user.dto.CustomUserResponseDTO;
+import se.mojujo.userservice.user.dto.*;
 import se.mojujo.userservice.user.mapper.CustomUserMapper;
 
 import java.util.UUID;
@@ -57,9 +55,7 @@ public class UserController {
     @PatchMapping("/username")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<Void> changeUsername(@Valid @RequestBody ChangeUsernameRequest request, Authentication authentication) {
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        CustomUser customUser = userDetails.getCustomUser();
-        UUID userId = customUser.getId();
+        UUID userId = ((CustomUserDetails) authentication.getPrincipal()).getCustomUser().getId();
 
         customUserService.changeUsername(userId, request.newUsername());
 
@@ -69,11 +65,26 @@ public class UserController {
     @PatchMapping("/email")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<Void> changeEmail(@Valid @RequestBody ChangeEmailRequest request, Authentication authentication) {
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        CustomUser customUser = userDetails.getCustomUser();
-        UUID userId = customUser.getId();
+        UUID userId = ((CustomUserDetails) authentication.getPrincipal()).getCustomUser().getId();
 
         customUserService.changeEmail(userId, request.newEmail());
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/password")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public ResponseEntity<Void> changePassword(
+            @Valid @RequestBody ChangePasswordRequest request,
+            Authentication authentication,
+            HttpServletRequest httpRequest
+    ) {
+        UUID userId = ((CustomUserDetails) authentication.getPrincipal()).getCustomUser().getId();
+
+        customUserService.changePassword(userId, request.oldPassword(),  request.newPassword());
+
+        // Invalidate session
+        httpRequest.getSession().invalidate();
+
         return ResponseEntity.noContent().build();
     }
 }
