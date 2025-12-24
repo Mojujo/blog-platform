@@ -83,6 +83,14 @@ public class CustomUserService {
         CustomUser user = customUserRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
+        if (newUsername.equals(user.getUsername())) {
+            return;
+        }
+
+        if (customUserRepository.existsByUsername(newUsername)) {
+            throw new UsernameAlreadyExistsException("Username already taken");
+        }
+
         user.setUsername(newUsername);
         customUserRepository.save(user);
 
@@ -91,13 +99,17 @@ public class CustomUserService {
                 "Username changed successfully",
                 "userId", user.getId(), "New Username", newUsername);
 
-        // Publish event
+        // Publish events
         rabbitService.sendUsernameChangedEvent(userId, newUsername);
+        rabbitService.sendAuditEvent(
+                "USERNAME_CHANGED",
+                Map.of("userId", user.getId(), "newUsername", newUsername)
+        );
     }
 
     @Transactional
     public void changeEmail(UUID userId, String newEmail) {
-        CustomUser user =  customUserRepository.findById(userId)
+        CustomUser user = customUserRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         user.setEmail(newEmail);
