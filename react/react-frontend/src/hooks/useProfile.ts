@@ -13,12 +13,14 @@ export const useProfile = () => {
     const { user } = useAuth();
     const [profile, setProfile] = useState<UserProfile | null>(null);
     const [loading, setLoading] = useState(false)
-    
+
     const fetchProfile = async () => {
 
         setLoading(true);
 
         try {
+            await apiClient.get("/user/csrf");
+
             const response = await apiClient.get("/user/profile");
             setProfile(response.data);
         } catch (err: any) {
@@ -36,5 +38,5 @@ export const useProfile = () => {
         }
     }, [user]);
 
-    return { profile, loading, fetchProfile};
+    return { profile, loading, fetchProfile };
 };
