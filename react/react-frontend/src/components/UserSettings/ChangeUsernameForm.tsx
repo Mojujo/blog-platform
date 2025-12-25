@@ -2,13 +2,13 @@ import { useState } from "react";
 import { useUserEdit } from "../../hooks/useUserEdit"
 
 export const ChangeUsernameForm = () => {
-    const { changeUsername, loading, error } = useUserEdit();
+    const { changeUsername, status, error } = useUserEdit();
     const [username, setUsername] = useState("");
     const [success, setSuccess] = useState(false);
 
     const submit = async () => {
         const ok = await changeUsername(username);
-        setSuccess(ok)
+        setSuccess(ok);
     };
 
     return (
@@ -20,7 +20,7 @@ export const ChangeUsernameForm = () => {
                     onChange={e => setUsername(e.target.value)}
                     placeholder="New username"
                 />
-                <button onClick={submit} disabled={loading || !username}>Update</button>
+                <button onClick={submit} disabled={status === "loading" || !username}>Update</button>
                 {success && <p>Username updated</p>}
                 {error && <p>{error}</p>}
             </div>

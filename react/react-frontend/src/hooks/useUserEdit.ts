@@ -1,36 +1,35 @@
 import { useState } from "react"
 import apiClient from "../api/apiClient";
 
+type Status = "idle" | "loading" | "success" | "error";
+
 export const useUserEdit = () => {
-    const [loading, setLoading] = useState(false);
+    const [status, setStatus] = useState<Status>("idle");
     const [error, setError] = useState<string | null>(null);
 
     const patch = async (url: string, body: object) => {
-        setLoading(true);
+        setStatus("loading")
         setError(null);
 
         try {
             await apiClient.patch(url, body);
             return true;
         } catch (err: any) {
-            const msg =
-                err?.response?.data?.message ??
-                err?.response?.data ?? "Request failed";
-            setError(msg);
-            return false;
+            setStatus("error");
+            setError(err?.response?.data?.detail ?? "Error updating profile");
         } finally {
-            setLoading(false);
+            setStatus("success")
         }
     };
 
     return {
-        loading,
+        status,
         error,
-        changeUsername: (newUsername: string) => 
-            patch("/user/username", {newUsername}),
+        changeUsername: (newUsername: string) =>
+            patch("/user/username", { newUsername }),
         changeEmail: (newEmail: string) =>
-            patch("/user/email", {newEmail}),
+            patch("/user/email", { newEmail }),
         changePassword: (oldPassword: string, newPassword: string) =>
-            patch("/user/password", {oldPassword, newPassword})
+            patch("/user/password", { oldPassword, newPassword })
     }
 }
