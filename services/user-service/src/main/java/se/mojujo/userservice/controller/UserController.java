@@ -74,14 +74,10 @@ public class UserController {
 
     @PatchMapping("/password")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<Void> changePassword(
-            @Valid @RequestBody ChangePasswordRequest request,
-            Authentication authentication,
-            HttpServletRequest httpRequest
-    ) {
+    public ResponseEntity<Void> changePassword(@Valid @RequestBody ChangePasswordRequest request, Authentication authentication) {
         UUID userId = ((CustomUserDetails) authentication.getPrincipal()).getCustomUser().getId();
 
-        customUserService.changePassword(userId, request.oldPassword(),  request.newPassword());
+        customUserService.changePassword(userId, request.oldPassword(), request.newPassword());
 
         return ResponseEntity.noContent().build();
     }
