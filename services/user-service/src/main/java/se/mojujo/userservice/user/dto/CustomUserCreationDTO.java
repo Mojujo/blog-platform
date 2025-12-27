@@ -1,9 +1,6 @@
 package se.mojujo.userservice.user.dto;
 
 import jakarta.validation.constraints.*;
-import se.mojujo.userservice.user.authority.UserRole;
-
-import java.util.Set;
 
 public record CustomUserCreationDTO(
 
@@ -12,7 +9,10 @@ public record CustomUserCreationDTO(
         String username,
 
         @NotBlank
-        @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$", message = "Invalid email address")
+        @Pattern(
+                regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*\\.[A-Za-z]{2,}$",
+                message = "Invalid email address"
+        )
         String email,
 
         @Pattern(
