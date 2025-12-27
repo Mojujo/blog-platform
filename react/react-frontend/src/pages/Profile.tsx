@@ -3,6 +3,7 @@ import { useProfileFeed } from "../hooks/useProfileFeed";
 import { useProfile } from "../hooks/useProfile";
 import styles from "./Profile.module.css"
 import { ChangeUsernameForm } from "../components/UserSettings/ChangeUsernameForm";
+import { ChangeEmailForm } from "../components/UserSettings/ChangeEmailForm";
 
 export default function Profile({ setScreen }: { setScreen: (s: Screen) => void }) {
 
@@ -26,6 +27,7 @@ export default function Profile({ setScreen }: { setScreen: (s: Screen) => void 
                 </div>
                 <div>
                     <ChangeUsernameForm />
+                    <ChangeEmailForm />
                 </div>
 
                 {loadingPosts && page === 0 ? (
