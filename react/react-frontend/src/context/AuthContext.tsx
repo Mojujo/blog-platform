@@ -58,8 +58,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const refreshUser = async () => {
 
         try {
-            await apiClient.get("/user/csrf");
-
             const response = await apiClient.get("/auth/me");
             setUser({
                 username: response.data.username,
@@ -71,7 +69,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 setUser(null);
             } else {
                 console.error("Failed to refresh user", err)
-            } 
+            }
         } finally {
             setAuthLoaded(true);
         }
@@ -82,9 +80,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
     const login = async (username: string, password: string): Promise<boolean> => {
-
-        await apiClient.get("/user/csrf");
-
         try {
             const response = await apiClient.post("/auth/login", { username, password });
 
@@ -104,8 +99,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const logout = async (): Promise<void> => {
 
         try {
-            await apiClient.get("/user/csrf");
-
             await apiClient.post("auth/logout");
 
         } catch (err: any) {
@@ -114,7 +107,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             setUser(null);
         }
 
-        
+
     };
 
     return (
