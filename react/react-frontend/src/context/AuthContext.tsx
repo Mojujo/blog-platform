@@ -24,10 +24,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     // Axios interceptor to automatically attach CSRF tokens
     useEffect(() => {
-        const interceptor = apiClient.interceptors.request.use(config => {
+        const interceptor = apiClient.interceptors.request.use(async config => {
 
             if (!config.headers) {
                 config.headers = {} as any;
+            }
+
+            if (config.url !== "/user/csrf") {
+                try {
+                    // Fetch CSRF token if not present
+                    if (!getXsrfToken()) {
+                        await apiClient.get("/user/csrf");
+                    }
+                } catch (err: any) {
+                    console.error("Failed to fetch CSRF token", err)
+                }
             }
 
             const token = getXsrfToken();

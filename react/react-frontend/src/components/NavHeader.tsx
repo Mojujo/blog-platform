@@ -10,21 +10,13 @@ export default function NavHeader({ setScreen }: { setScreen: (s: Screen) => voi
             <header className={styles.centerHeader}>
                 <nav className={styles.navContainer}>
                     <div className={styles.homeContainer}>
-
                         <button
                             className={styles.navButton}
                             onClick={() => setScreen("home")}>
                             <img src="/assets/home.svg" alt="" className={styles.homeImage} />
                         </button>
-                        <h2>
-                            Teknikbloggen
-                        </h2>
-
+                        <h2>Teknikbloggen</h2>
                     </div>
-
-
-
-
                     <div className={styles.accessButtons}>
                         {user && (
                             <button className={styles.navButton}
@@ -32,8 +24,6 @@ export default function NavHeader({ setScreen }: { setScreen: (s: Screen) => voi
                                 <img src="/assets/profile.svg" alt="Profile" />
                             </button>
                         )}
-
-
                         {!user ? (
                             <>
                                 <button className={styles.loginButton}
@@ -46,7 +36,6 @@ export default function NavHeader({ setScreen }: { setScreen: (s: Screen) => voi
                             </>
                         ) : (
                             <>
-
                                 <button className={styles.logoutButton}
                                     onClick={async () => {
                                         logout();
@@ -58,7 +47,6 @@ export default function NavHeader({ setScreen }: { setScreen: (s: Screen) => voi
                             </>
                         )}
                     </div>
-
                 </nav>
             </header>
         </>

@@ -19,8 +19,6 @@ export const useProfile = () => {
         setLoading(true);
 
         try {
-            await apiClient.get("/user/csrf");
-
             const response = await apiClient.get("/user/profile");
             setProfile(response.data);
         } catch (err: any) {
