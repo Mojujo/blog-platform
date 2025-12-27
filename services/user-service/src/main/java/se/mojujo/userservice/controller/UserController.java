@@ -68,6 +68,7 @@ public class UserController {
         UUID userId = ((CustomUserDetails) authentication.getPrincipal()).getCustomUser().getId();
 
         customUserService.changeEmail(userId, request.newEmail());
+
         return ResponseEntity.noContent().build();
     }
 
@@ -81,9 +82,6 @@ public class UserController {
         UUID userId = ((CustomUserDetails) authentication.getPrincipal()).getCustomUser().getId();
 
         customUserService.changePassword(userId, request.oldPassword(),  request.newPassword());
-
-        // Invalidate session
-        httpRequest.getSession().invalidate();
 
         return ResponseEntity.noContent().build();
     }

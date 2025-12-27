@@ -4,6 +4,7 @@ import { useProfile } from "../hooks/useProfile";
 import styles from "./Profile.module.css"
 import { ChangeUsernameForm } from "../components/UserSettings/ChangeUsernameForm";
 import { ChangeEmailForm } from "../components/UserSettings/ChangeEmailForm";
+import { ChangePasswordForm } from "../components/UserSettings/ChangePasswordForm.tsx";
 
 export default function Profile({ setScreen }: { setScreen: (s: Screen) => void }) {
 
@@ -28,6 +29,7 @@ export default function Profile({ setScreen }: { setScreen: (s: Screen) => void 
                 <div>
                     <ChangeUsernameForm />
                     <ChangeEmailForm />
+                    <ChangePasswordForm />
                 </div>
 
                 {loadingPosts && page === 0 ? (

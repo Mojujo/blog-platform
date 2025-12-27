@@ -104,7 +104,7 @@ public class CustomUserService {
         rabbitService.sendAuditEvent(
                 "USERNAME_CHANGED",
                 Map.of("userId", user.getId(), "newUsername", newUsername)
-        );
+         );
     }
 
     @Transactional
