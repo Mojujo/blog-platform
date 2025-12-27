@@ -27,9 +27,9 @@ export default function Profile({ setScreen }: { setScreen: (s: Screen) => void 
                     <button onClick={() => setScreen("createPost")}>Create Post</button>
                 </div>
                 <div>
-                    <ChangeUsernameForm />
-                    <ChangeEmailForm />
-                    <ChangePasswordForm />
+                    <ChangeUsernameForm setScreen={setScreen} />
+                    <ChangeEmailForm setScreen={setScreen} />
+                    <ChangePasswordForm setScreen={setScreen} />
                 </div>
 
                 {loadingPosts && page === 0 ? (

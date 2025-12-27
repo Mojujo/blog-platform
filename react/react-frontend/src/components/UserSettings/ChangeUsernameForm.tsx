@@ -1,14 +1,19 @@
 import { useState } from "react";
 import { useUserEdit } from "../../hooks/useUserEdit"
+import { Screen } from "../../App";
 
-export const ChangeUsernameForm = () => {
-    const { changeUsername, status, error } = useUserEdit();
+export const ChangeUsernameForm = ({ setScreen }: { setScreen: (s: Screen) => void }) => {
+    const { changeUsername, status, error } = useUserEdit(() => setScreen("login"));
     const [username, setUsername] = useState("");
     const [success, setSuccess] = useState(false);
 
     const submit = async () => {
         const ok = await changeUsername(username);
         setSuccess(ok);
+
+        if (ok) {
+            setUsername("");
+        }
     };
 
     return (

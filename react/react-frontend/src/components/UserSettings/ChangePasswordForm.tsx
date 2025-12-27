@@ -1,8 +1,9 @@
 import { useUserEdit } from "../../hooks/useUserEdit.ts";
 import { useState } from "react";
+import { Screen } from "../../App";
 
-export const ChangePasswordForm = () => {
-    const { changePassword, status, error } = useUserEdit();
+export const ChangePasswordForm = ({ setScreen }: { setScreen: (s: Screen) => void }) => {
+    const { changePassword, status, error } = useUserEdit(() => setScreen("login"));
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [success, setSuccess] = useState(false);
@@ -10,7 +11,7 @@ export const ChangePasswordForm = () => {
     const submit = async () => {
         const ok = await changePassword(oldPassword, newPassword);
         setSuccess(ok);
-        
+
         if (ok) {
             setOldPassword("");
             setNewPassword("");

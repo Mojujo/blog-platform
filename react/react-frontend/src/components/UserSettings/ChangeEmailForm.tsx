@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useUserEdit } from "../../hooks/useUserEdit"
+import { Screen } from "../../App";
 
-export const ChangeEmailForm = () => {
-    const { changeEmail, status, error } = useUserEdit();
+export const ChangeEmailForm = ({ setScreen }: { setScreen: (s: Screen) => void }) => {
+    const { changeEmail, status, error } = useUserEdit(() => setScreen("login"));
     const [email, setEmail] = useState("");
     const [success, setSuccess] = useState(false);
 

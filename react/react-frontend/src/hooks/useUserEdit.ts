@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 
 type Status = "idle" | "loading" | "success" | "error";
 
-export const useUserEdit = () => {
+export const useUserEdit = (onLogout?: () => void) => {
     const [status, setStatus] = useState<Status>("idle");
     const [error, setError] = useState<string | null>(null);
     const { logout } = useAuth();
@@ -17,6 +17,7 @@ export const useUserEdit = () => {
             await apiClient.patch(url, body);
             setStatus("success");
             logout();
+            if (onLogout) onLogout();
             return true;
 
         } catch (err: any) {
