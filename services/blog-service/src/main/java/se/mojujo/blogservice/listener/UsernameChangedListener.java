@@ -6,7 +6,6 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.mojujo.blogservice.config.RabbitConfig;
-import se.mojujo.blogservice.exception.BlogPostNotFoundException;
 import se.mojujo.blogservice.exception.BlogPostUpdateException;
 import se.mojujo.blogservice.service.BlogPostService;
 import se.mojujo.blogservice.util.LogUtil;
