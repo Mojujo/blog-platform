@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Screen } from "../App";
 import { useCreatePost } from "../hooks/useCreatePost";
 import styles from "./CreatePost.module.css"
+import { useScreen } from "../context/ScreenContext";
 
-export default function ({ setScreen }: { setScreen: (s: Screen) => void }) {
+export default function () {
 
+    const { setScreen } = useScreen();
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [imageUrl, setImageUrl] = useState("");

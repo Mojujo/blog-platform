@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import './App.css'
 import Home from './pages/Home'
 import Login from './pages/Login'
@@ -6,22 +5,21 @@ import Register from './pages/Register'
 import NavHeader from './components/NavHeader';
 import Profile from './pages/Profile';
 import CreatePost from './pages/CreatePost';
-
-export type Screen = "home" | "login" | "register" | "profile" | "createPost";
+import { useScreen } from './context/ScreenContext';
 
 function App() {
-  const [screen, setScreen] = useState<Screen>("home");
+  const { screen } = useScreen();
 
   return (
     <>
-      <NavHeader setScreen={setScreen} />
+      <NavHeader />
 
       <main>
         {screen === "home" && <Home />}
-        {screen === "login" && <Login setScreen={setScreen} />}
-        {screen === "register" && <Register setScreen={setScreen} />}
-        {screen === "profile" && <Profile setScreen={setScreen} />}
-        {screen === "createPost" && <CreatePost setScreen={setScreen} />}
+        {screen === "login" && <Login />}
+        {screen === "register" && <Register />}
+        {screen === "profile" && <Profile />}
+        {screen === "createPost" && <CreatePost />}
       </main>
     </>
   )

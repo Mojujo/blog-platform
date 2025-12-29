@@ -1,4 +1,3 @@
-import { Screen } from "../App";
 import { useProfileFeed } from "../hooks/useProfileFeed";
 import { useProfile } from "../hooks/useProfile";
 import styles from "./Profile.module.css"
@@ -7,9 +6,11 @@ import { ChangeEmailForm } from "../components/UserSettings/ChangeEmailForm";
 import { ChangePasswordForm } from "../components/UserSettings/ChangePasswordForm.tsx";
 import { useAuth } from "../context/AuthContext.tsx";
 import { useEffect } from "react";
+import { useScreen } from "../context/ScreenContext.tsx";
 
-export default function Profile({ setScreen }: { setScreen: (s: Screen) => void }) {
+export default function Profile() {
 
+    const { setScreen } = useScreen(); 
     const { profile, loading: loadingProfile } = useProfile();
     const { posts, loading: loadingPosts, fetchPosts, page, hasMore } = useProfileFeed();
     const { user, authLoaded } = useAuth();

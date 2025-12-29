@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Screen } from "../App";
 import { useRegister } from "../hooks/useRegister";
 import styles from "./Register.module.css"
+import { useScreen } from "../context/ScreenContext";
 
 
-export default function Register({ setScreen }: { setScreen: (s: Screen) => void }) {
+export default function Register() {
 
+    const { setScreen } = useScreen();
     const { register } = useRegister();
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
