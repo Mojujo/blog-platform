@@ -57,6 +57,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const refreshUser = async () => {
 
+        if (localStorage.getItem("loggedOut") === "true") {
+            setUser(null);
+            setAuthLoaded(true);
+            return;
+        }
+
         try {
             const response = await apiClient.get("/auth/me");
             setUser({
@@ -88,6 +94,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 roles: response.data.roles
             });
 
+            localStorage.removeItem("loggedOut");
+
             return true;
 
         } catch (err: any) {
@@ -105,6 +113,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             console.error("Logout Failed", err)
         } finally {
             setUser(null);
+            localStorage.setItem("loggedOut", "true");
+            localStorage.removeItem("screen");
         }
 
 

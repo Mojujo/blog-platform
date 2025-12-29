@@ -10,7 +10,7 @@ export interface UserProfile {
 }
 
 export const useProfile = () => {
-    const { user } = useAuth();
+    const { user, authLoaded } = useAuth();
     const [profile, setProfile] = useState<UserProfile | null>(null);
     const [loading, setLoading] = useState(false)
 
@@ -29,12 +29,13 @@ export const useProfile = () => {
     };
 
     useEffect(() => {
+        if (!authLoaded) return;
         if (user) {
             fetchProfile();
         } else {
             setProfile(null);
         }
-    }, [user]);
+    }, [user, authLoaded]);
 
     return { profile, loading, fetchProfile };
 };
