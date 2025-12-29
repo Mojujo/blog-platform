@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import se.mojujo.userservice.exception.EmailAlreadyExistsException;
+import se.mojujo.userservice.exception.InvalidCredentialsException;
 import se.mojujo.userservice.exception.UserNotFoundException;
 import se.mojujo.userservice.exception.UsernameAlreadyExistsException;
 import se.mojujo.userservice.repository.CustomUserRepository;
@@ -82,6 +83,14 @@ public class CustomUserService {
         CustomUser user = customUserRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
 
+        if (newUsername.equals(user.getUsername())) {
+            return;
+        }
+
+        if (customUserRepository.existsByUsername(newUsername)) {
+            throw new UsernameAlreadyExistsException("Username already taken");
+        }
+
         user.setUsername(newUsername);
         customUserRepository.save(user);
 
@@ -90,7 +99,59 @@ public class CustomUserService {
                 "Username changed successfully",
                 "userId", user.getId(), "New Username", newUsername);
 
-        // Publish event
+        // Publish events
         rabbitService.sendUsernameChangedEvent(userId, newUsername);
+        rabbitService.sendAuditEvent(
+                "USERNAME_CHANGED",
+                Map.of("userId", user.getId(), "newUsername", newUsername)
+         );
+    }
+
+    @Transactional
+    public void changeEmail(UUID userId, String newEmail) {
+        CustomUser user = customUserRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        if (newEmail.equals(user.getEmail())) {
+            return;
+        }
+
+        if (customUserRepository.existsByEmail(newEmail)) {
+            throw new EmailAlreadyExistsException("Email already taken");
+        }
+
+        user.setEmail(newEmail);
+        customUserRepository.save(user);
+
+        LogUtil.info(logger,
+                "EMAIL_CHANGED",
+                "Email changed successfully",
+                "userId", user.getId(), "New Email", newEmail);
+
+        rabbitService.sendAuditEvent(
+                "EMAIL_CHANGED",
+                Map.of("userId", user.getId(), "newEmail", newEmail)
+        );
+    }
+
+    @Transactional
+    public void changePassword(UUID userId, String oldPassword, String newPassword) {
+        CustomUser user = customUserRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new InvalidCredentialsException("Invalid credentials");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        customUserRepository.save(user);
+
+        LogUtil.info(logger,
+                "PASSWORD_CHANGED",
+                "Password changed successfully",
+                "userId", user.getId());
+
+        rabbitService.sendAuditEvent("PASSWORD_CHANGED",
+                Map.of("userId", user.getId()));
     }
 }

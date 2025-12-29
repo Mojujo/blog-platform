@@ -24,10 +24,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     // Axios interceptor to automatically attach CSRF tokens
     useEffect(() => {
-        const interceptor = apiClient.interceptors.request.use(config => {
+        const interceptor = apiClient.interceptors.request.use(async config => {
 
             if (!config.headers) {
                 config.headers = {} as any;
+            }
+
+            if (config.url !== "/user/csrf") {
+                try {
+                    // Fetch CSRF token if not present
+                    if (!getXsrfToken()) {
+                        await apiClient.get("/user/csrf");
+                    }
+                } catch (err: any) {
+                    console.error("Failed to fetch CSRF token", err)
+                }
             }
 
             const token = getXsrfToken();
@@ -47,8 +58,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const refreshUser = async () => {
 
         try {
-            await apiClient.get("/user/csrf");
-
             const response = await apiClient.get("/auth/me");
             setUser({
                 username: response.data.username,
@@ -60,7 +69,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 setUser(null);
             } else {
                 console.error("Failed to refresh user", err)
-            } 
+            }
         } finally {
             setAuthLoaded(true);
         }
@@ -71,9 +80,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
     const login = async (username: string, password: string): Promise<boolean> => {
-
-        await apiClient.get("/user/csrf");
-
         try {
             const response = await apiClient.post("/auth/login", { username, password });
 
@@ -93,8 +99,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const logout = async (): Promise<void> => {
 
         try {
-            await apiClient.get("/user/csrf");
-
             await apiClient.post("auth/logout");
 
         } catch (err: any) {
@@ -103,7 +107,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             setUser(null);
         }
 
-        
+
     };
 
     return (

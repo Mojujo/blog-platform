@@ -1,20 +1,15 @@
 package se.mojujo.userservice.user.dto;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
-public record CustomUserCreationDTO(
-
-        @Size(min = 2, max = 25, message = "Username length should be between 2-25")
-        @NotBlank
-        String username,
+public record ChangePasswordRequest(
 
         @NotBlank
-        @Pattern(
-                regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*\\.[A-Za-z]{2,}$",
-                message = "Invalid email address"
-        )
-        String email,
+        String oldPassword,
 
+        @NotBlank
         @Pattern(
                 regexp = "^" +
                         "(?=.*[a-z])" +        // at least one lowercase letter
@@ -25,5 +20,6 @@ public record CustomUserCreationDTO(
                 message = "Password must contain at least one uppercase, one lowercase, one digit, and one special character"
         )
         @Size(max = 40, message = "Maximum length of password exceeded")
-        String password
-) {}
+        String newPassword
+) {
+}

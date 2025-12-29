@@ -2,11 +2,23 @@ import { Screen } from "../App";
 import { useProfileFeed } from "../hooks/useProfileFeed";
 import { useProfile } from "../hooks/useProfile";
 import styles from "./Profile.module.css"
+import { ChangeUsernameForm } from "../components/UserSettings/ChangeUsernameForm";
+import { ChangeEmailForm } from "../components/UserSettings/ChangeEmailForm";
+import { ChangePasswordForm } from "../components/UserSettings/ChangePasswordForm.tsx";
+import { useAuth } from "../context/AuthContext.tsx";
+import { useEffect } from "react";
 
 export default function Profile({ setScreen }: { setScreen: (s: Screen) => void }) {
 
     const { profile, loading: loadingProfile } = useProfile();
     const { posts, loading: loadingPosts, fetchPosts, page, hasMore } = useProfileFeed();
+    const { user, authLoaded } = useAuth();
+
+    useEffect(() => {
+        if (authLoaded && !user) {
+            setScreen("login")
+        }
+    }, [authLoaded, user, setScreen])
 
     if (loadingProfile) return <p>Loading profile... </p>
     if (!profile) return <p>Profile not found</p>
@@ -22,6 +34,11 @@ export default function Profile({ setScreen }: { setScreen: (s: Screen) => void 
                     <h3>Your posts</h3>
 
                     <button onClick={() => setScreen("createPost")}>Create Post</button>
+                </div>
+                <div>
+                    <ChangeUsernameForm />
+                    <ChangeEmailForm />
+                    <ChangePasswordForm />
                 </div>
 
                 {loadingPosts && page === 0 ? (

@@ -16,8 +16,6 @@ export const useCreatePost = () => {
         setError(null);
 
         try {
-            await apiClient.get("/user/csrf");
-
             const response = await apiClient.post("/post", payload);
             setLoading(false);
             return response.data

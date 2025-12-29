@@ -13,7 +13,7 @@ export const useProfile = () => {
     const { user } = useAuth();
     const [profile, setProfile] = useState<UserProfile | null>(null);
     const [loading, setLoading] = useState(false)
-    
+
     const fetchProfile = async () => {
 
         setLoading(true);
@@ -36,5 +36,5 @@ export const useProfile = () => {
         }
     }, [user]);
 
-    return { profile, loading, fetchProfile};
+    return { profile, loading, fetchProfile };
 };
