@@ -20,7 +20,7 @@ export default function PostItem({ post, onEdit, onDelete}: Props) {
             {post.isOwner && (
                 <div>
                     <button onClick={() => onEdit?.(post)}>Edit</button>
-                    <button onClick={() => onDelete?.(post.id)}></button>
+                    <button onClick={() => onDelete?.(post.id)}>Delete</button>
                 </div>
             )}
         </li>
