@@ -43,5 +43,5 @@ export const useProfileFeed = (pageSize: number = 10) => {
         fetchPosts(0);
     }, [user, authLoaded]);
 
-    return { posts, loading, fetchPosts, page, hasMore }
+    return { posts, setPosts, loading, fetchPosts, page, hasMore }
 }

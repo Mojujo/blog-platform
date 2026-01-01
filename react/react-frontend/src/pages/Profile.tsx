@@ -7,12 +7,15 @@ import { ChangePasswordForm } from "../components/UserSettings/ChangePasswordFor
 import { useAuth } from "../context/AuthContext.tsx";
 import { useEffect } from "react";
 import { useScreen } from "../context/ScreenContext.tsx";
+import PostItem from "../components/Posts/PostItem.tsx";
+import { useEditDeletePost } from "../hooks/useEditDeletePost.ts";
 
 export default function Profile() {
 
     const { setScreen } = useScreen(); 
     const { profile, loading: loadingProfile } = useProfile();
-    const { posts, loading: loadingPosts, fetchPosts, page, hasMore } = useProfileFeed();
+    const { posts, setPosts, loading: loadingPosts, fetchPosts, page, hasMore } = useProfileFeed();
+        const { editPost, deletePost } = useEditDeletePost(setPosts);
     const { user, authLoaded } = useAuth();
 
     useEffect(() => {
@@ -47,17 +50,16 @@ export default function Profile() {
                 ) : posts.length === 0 ? (
                     <p>No posts yet</p>
                 ) : (
-                    <ul>
-                        {posts.map(post => (
-                            <li key={post.id}>
-                                <h4>{post.title}</h4>
-                                <p>{post.content}</p>
-                                <small>
-                                    {new Date(post.createdDate).toLocaleString()}
-                                </small>
-                            </li>
-                        ))}
-                    </ul>
+                <ul>
+                    {posts.map(post => (
+                        <PostItem
+                            key={post.id}
+                            post={post}
+                            onEdit={editPost}
+                            onDelete={deletePost}
+                        />
+                    ))}
+                </ul>
                 )}
 
                 {hasMore && !loadingPosts && (

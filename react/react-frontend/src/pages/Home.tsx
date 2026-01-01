@@ -21,6 +21,7 @@ export default function Home() {
                             post={post}
                             onEdit={editPost}
                             onDelete={deletePost}
+                            showAuthor={true}
                         />
                     ))}
                 </ul>
