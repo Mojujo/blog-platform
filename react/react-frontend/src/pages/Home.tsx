@@ -32,4 +32,3 @@ export default function Home() {
         </>
     )
 }
-// TODO ADD AUTHOR TO POSTS
