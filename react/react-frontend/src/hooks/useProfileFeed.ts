@@ -1,13 +1,7 @@
 import { useEffect, useState } from "react";
 import apiClient from "../api/apiClient";
 import { useAuth } from "../context/AuthContext";
-
-export interface Post {
-    id: string;
-    title: string;
-    content: string;
-    createdDate: string;
-}
+import { Post } from "../types/Post";
 
 export const useProfileFeed = (pageSize: number = 10) => {
     const { user, authLoaded } = useAuth();

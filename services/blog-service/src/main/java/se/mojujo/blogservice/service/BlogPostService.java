@@ -102,7 +102,7 @@ public class BlogPostService {
                     "User attempted to update another user's post",
                     "postId", postId, "userId", user.getUserId(), "ownerId", post.getUserId());
 
-            throw new BlogPostAccessDeniedException("User is not allowed to delete this post");
+            throw new BlogPostAccessDeniedException("User is not allowed to update this post");
         }
 
         post.setTitle(dto.title());

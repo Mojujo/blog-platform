@@ -1,14 +1,7 @@
 import { useEffect, useState } from "react";
 import apiClient from "../api/apiClient";
+import { Post } from "../types/Post";
 
-export interface Post {
-    id: string;
-    title: string;
-    content: string;
-    createdDate: string;
-    authorUsername: string;
-}
-// TODO AUTHOR
 export const useFeed = (pageSize: number = 10) => {
     const [posts, setPosts] = useState<Post[]>([]);
     const [loading, setLoading] = useState(false);
