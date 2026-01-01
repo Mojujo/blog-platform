@@ -1,5 +1,5 @@
-import { useAuth } from "../context/AuthContext";
-import { useScreen } from "../context/ScreenContext";
+import { useAuth } from "../../context/AuthContext";
+import { useScreen } from "../../context/ScreenContext"
 import styles from "./NavHeader.module.css"
 
 export default function NavHeader() {

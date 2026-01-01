@@ -12,6 +12,7 @@ public record BlogPostResponseDTO(
         String content,
         String imageUrl,
         Instant createdDate,
-        Instant updatedAt // null if never updated
+        Instant updatedAt, // null if never updated
+        Boolean isOwner
 
         ) {}

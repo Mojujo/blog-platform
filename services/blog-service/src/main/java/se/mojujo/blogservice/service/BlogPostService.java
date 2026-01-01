@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import se.mojujo.blogservice.exception.BlogPostAccessDeniedException;
 import se.mojujo.blogservice.exception.BlogPostNotFoundException;
@@ -77,7 +78,7 @@ public class BlogPostService {
 
         auditService.sendAuditEvent("POST_CREATED", auditData);
 
-        return blogPostMapper.toResponse(savedPost);
+        return blogPostMapper.toResponse(savedPost, user.getUserId());
     }
 
     public BlogPostResponseDTO updatePost(BlogPostCreationDTO dto, Authentication authentication, UUID postId) {
@@ -114,7 +115,7 @@ public class BlogPostService {
 
         LogUtil.info(logger, "BLOG_UPDATE_SUCCESS", null, "postId", postId, "userId", user.getUserId());
 
-        return blogPostMapper.toResponse(savedPost);
+        return blogPostMapper.toResponse(savedPost, user.getUserId());
     }
 
     public void updatePostAuthor(UUID userId, String newUsername) {
@@ -163,12 +164,21 @@ public class BlogPostService {
         Pageable pageable = PageRequest.of(page, size);
         Page<BlogPost> posts = blogPostRepository.findAllByUserIdOrderByCreatedDateDesc(user.getUserId(), pageable);
 
-        return posts.map(blogPostMapper::toResponse);
+        return posts.map(post -> blogPostMapper.toResponse(post, user.getUserId()));
     }
 
     public Page<BlogPostResponseDTO> getAllPosts(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
         Page<BlogPost> posts = blogPostRepository.findAll(pageable);
-        return posts.map(blogPostMapper::toResponse);
+
+        UUID currentUserId;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof AuthenticatedUserDetails userDetails) {
+            currentUserId = userDetails.getUserId();
+        } else {
+            currentUserId = null;
+        }
+
+        return posts.map(post -> blogPostMapper.toResponse(post, currentUserId));
     }
 }
