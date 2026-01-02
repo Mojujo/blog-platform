@@ -1,8 +1,9 @@
-import { useAuth } from "../context/AuthContext";
-import { Screen } from "../App";
+import { useAuth } from "../../context/AuthContext";
+import { useScreen } from "../../context/ScreenContext"
 import styles from "./NavHeader.module.css"
 
-export default function NavHeader({ setScreen }: { setScreen: (s: Screen) => void }) {
+export default function NavHeader() {
+    const { setScreen } = useScreen();
     const { user, logout } = useAuth();
 
     return (

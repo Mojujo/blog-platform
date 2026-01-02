@@ -3,6 +3,7 @@ import { getXsrfToken } from "../util/csrfUtil";
 import apiClient from "../api/apiClient";
 
 type User = {
+    userId: string;
     username: string;
     roles: string[];
 };
@@ -57,9 +58,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const refreshUser = async () => {
 
+        if (localStorage.getItem("loggedOut") === "true") {
+            setUser(null);
+            setAuthLoaded(true);
+            return;
+        }
+
         try {
             const response = await apiClient.get("/auth/me");
             setUser({
+                userId: response.data.id,
                 username: response.data.username,
                 roles: response.data.roles
             });
@@ -84,9 +92,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             const response = await apiClient.post("/auth/login", { username, password });
 
             setUser({
+                userId: response.data.id,
                 username: response.data.username,
                 roles: response.data.roles
             });
+
+            localStorage.removeItem("loggedOut");
 
             return true;
 
@@ -105,6 +116,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             console.error("Logout Failed", err)
         } finally {
             setUser(null);
+            localStorage.setItem("loggedOut", "true");
+            localStorage.removeItem("screen");
         }
 
 

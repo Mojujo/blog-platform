@@ -1,12 +1,12 @@
 import { useState } from "react"
 import { useAuth } from "../context/AuthContext"
-import { Screen } from "../App";
 import styles from "./Login.module.css"
+import { useScreen } from "../context/ScreenContext";
 
-export default function Login({ setScreen }: { setScreen: (s: Screen) => void }) {
+export default function Login() {
 
+    const { setScreen } = useScreen();
     const { login } = useAuth();
-
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [message, setMessage] = useState("")

@@ -21,6 +21,7 @@ export const ChangeEmailForm = () => {
                 <h3>Change Email</h3>
                 <input
                     value={email}
+                    name="email-edit"
                     onChange={e => setEmail(e.target.value)}
                     placeholder="New Email"
                 />

@@ -21,6 +21,7 @@ export const ChangeUsernameForm = () => {
                 <h3>Change Username</h3>
                 <input
                     value={username}
+                    name="username-edit"
                     onChange={e => setUsername(e.target.value)}
                     placeholder="New username"
                 />

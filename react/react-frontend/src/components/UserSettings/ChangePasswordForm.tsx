@@ -23,12 +23,14 @@ export const ChangePasswordForm = () => {
                 <h3>Change Password</h3>
                 <input
                     value={oldPassword}
+                    name="password-old-edit"
                     onChange={(e) => setOldPassword(e.target.value)}
                     placeholder="Current Password"
                     type="password"
                 />
                 <input
                     value={newPassword}
+                    name="password-new-edit"
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="New Password"
                     type="password"

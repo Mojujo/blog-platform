@@ -20,7 +20,9 @@ public class BlogPostMapper {
         );
     }
 
-    public BlogPostResponseDTO toResponse(BlogPost blogPost) {
+    public BlogPostResponseDTO toResponse(BlogPost blogPost, UUID currentUserId) {
+        boolean isOwner = blogPost.getUserId().equals(currentUserId);
+
         return new BlogPostResponseDTO(
                 blogPost.getId(),
                 blogPost.getUserId(),
@@ -29,7 +31,8 @@ public class BlogPostMapper {
                 blogPost.getContent(),
                 blogPost.getImageUrl(),
                 blogPost.getCreatedDate(),
-                blogPost.getUpdatedAt() // Can be null if not updated yet
+                blogPost.getUpdatedAt(), // Can be null if not updated yet
+                isOwner
         );
     }
 }
