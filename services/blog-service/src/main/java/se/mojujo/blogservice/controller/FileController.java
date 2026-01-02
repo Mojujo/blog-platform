@@ -27,7 +27,7 @@ public class FileController {
     }
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Map<String, String>> upload(
+    public ResponseEntity<Map<String, String>> uploadMedia(
             @RequestPart("file") MultipartFile file,
             Authentication authentication) {
 

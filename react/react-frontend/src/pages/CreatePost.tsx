@@ -25,10 +25,7 @@ export default function () {
             let uploadedImageUrl: string | undefined;
 
             if (imageFile) {
-                uploadedImageUrl = await uploadImageUtil(
-                    imageFile,
-                    "temp-user-id" // TODO REPLACE
-                );
+                uploadedImageUrl = await uploadImageUtil(imageFile);
             }
 
             const payload = { title, content, imageUrl: uploadedImageUrl || undefined };
@@ -37,6 +34,7 @@ export default function () {
             if (result) {
                 setScreen("profile")
             }
+            
         } catch (err: any) {
             console.error("Failed to create post", err)
         } finally {

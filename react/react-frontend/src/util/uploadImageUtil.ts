@@ -1,20 +1,14 @@
-import { supabase } from "./supabaseClient";
+import apiClient from "../api/apiClient";
 
-export async function uploadImageUtil(file: File, userId: string) {
+export async function uploadImageUtil(file: File): Promise<string> {
+    const formData = new FormData();
+    formData.append("file", file);
 
-    const fileExt = file.name.split(".").pop();
-    const fileName = `${crypto.randomUUID()}.${fileExt}`;
-    const filePath = `${userId}/${fileName}`;
+    const response = await apiClient.post("/files/upload", formData, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+    });
 
-    const { error } = await supabase.storage
-        .from("post-images")
-        .upload(filePath, file);
-
-    if (error) throw error;
-
-    const { data } = supabase.storage
-        .from("post-images")
-        .getPublicUrl(filePath);
-
-    return data.publicUrl
-} 
+    return response.data.url;
+}
