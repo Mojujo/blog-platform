@@ -1,6 +1,7 @@
 import { supabase } from "./supabaseClient";
 
 export async function uploadImageUtil(file: File, userId: string) {
+
     const fileExt = file.name.split(".").pop();
     const fileName = `${crypto.randomUUID()}.${fileExt}`;
     const filePath = `${userId}/${fileName}`;

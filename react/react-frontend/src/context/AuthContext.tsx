@@ -3,6 +3,7 @@ import { getXsrfToken } from "../util/csrfUtil";
 import apiClient from "../api/apiClient";
 
 type User = {
+    userId: string;
     username: string;
     roles: string[];
 };
@@ -66,6 +67,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         try {
             const response = await apiClient.get("/auth/me");
             setUser({
+                userId: response.data.id,
                 username: response.data.username,
                 roles: response.data.roles
             });
@@ -90,6 +92,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             const response = await apiClient.post("/auth/login", { username, password });
 
             setUser({
+                userId: response.data.id,
                 username: response.data.username,
                 roles: response.data.roles
             });

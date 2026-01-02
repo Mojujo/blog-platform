@@ -34,6 +34,7 @@ export default function Profile() {
                     <h2>{profile.username}</h2>
                     <p>{profile.email}</p>
                     <p>{profile.roles.join(", ")}</p>
+                    <p>{profile.id}</p>
 
                     <h3>Your posts</h3>
 
