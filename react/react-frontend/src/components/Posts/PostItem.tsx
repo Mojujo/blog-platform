@@ -31,12 +31,14 @@ export default function PostItem({ post, onEdit, onDelete, showAuthor }: Props) 
                 <div>
                     <input
                         type="text"
+                        name="edit-title"
                         value={title}
                         onChange={e => setTitle(e.target.value)}
                         placeholder="Title"
                     />
                     <textarea
                         value={content}
+                        name="edit-content"
                         onChange={e => setContent(e.target.value)}
                         placeholder="Content"
                     />
