@@ -50,6 +50,13 @@ export default function PostItem({ post, onEdit, onDelete, showAuthor }: Props) 
                     <h3>{post.title}</h3>
                     <p>{post.content}</p>
 
+                    {post.imageUrl && (
+                        <img
+                            src={post.imageUrl}
+                            alt={post.title}
+                        />
+                    )}
+
                     <small>
                         {showAuthor ? `By ${post.authorUsername} · ` : ""}
                         {new Date(post.createdDate).toLocaleString()}
