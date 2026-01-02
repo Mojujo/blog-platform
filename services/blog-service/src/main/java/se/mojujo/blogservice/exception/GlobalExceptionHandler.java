@@ -22,7 +22,8 @@ public class GlobalExceptionHandler {
             BlogPostNotFoundException.class,
             BlogPostUpdateException.class,
             InvalidBlogPostException.class,
-            UnauthorizedUserException.class
+            UnauthorizedUserException.class,
+            FileStorageException.class,
     })
     public ResponseEntity<ProblemDetail> handleErrorResponse(@NotNull ErrorResponse e) {
         return ResponseEntity

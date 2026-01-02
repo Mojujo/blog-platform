@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import se.mojujo.blogservice.exception.FileStorageException;
 import se.mojujo.blogservice.post.AuthenticatedUserDetails;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
@@ -72,7 +73,7 @@ public class FileStorageService {
             return publicBaseUrl + "/" + key;
 
         } catch (IOException e) {
-            throw new RuntimeException("Failed to upload file", e); // TODO CUSTOM EXCEPTION
+            throw new FileStorageException("Failed to upload image");
         }
     }
 }
