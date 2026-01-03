@@ -3,6 +3,7 @@ import { useCreatePost } from "../hooks/useCreatePost";
 import styles from "./CreatePost.module.css"
 import { useScreen } from "../context/ScreenContext";
 import { uploadImageUtil } from "../util/uploadImageUtil";
+import { ImageUploadWrapper } from "../components/Posts/ImageUploadWrapper";
 
 export default function () {
 
@@ -15,6 +16,13 @@ export default function () {
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [uploading, setUploading] = useState(false);
 
+    const handleImageSelect = (file: File) => {
+        setImageFile(file);
+        if (imagePreview) {
+            URL.revokeObjectURL(imagePreview);
+        }
+        setImagePreview(URL.createObjectURL(file));
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -54,6 +62,7 @@ export default function () {
         <>
             <div className={styles.formContainer}>
                 <h2>Create Post</h2>
+                <ImageUploadWrapper onFileSelect={handleImageSelect}>
                 <form className={styles.formInput}
                     onSubmit={handleSubmit}>
                     <input
@@ -98,6 +107,7 @@ export default function () {
                         <p>{uploading ? "Uploading image..." : loading ? "Publishing..." : "Publish"}</p>
                     </button>
                 </form>
+                </ImageUploadWrapper>
             </div>
         </>
     )
