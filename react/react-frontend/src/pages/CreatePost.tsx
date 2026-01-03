@@ -16,6 +16,8 @@ export default function () {
     const [content, setContent] = useState("");
     const [uploading, setUploading] = useState(false);
 
+
+    // TODO Extract create post into component / hook to reuse in PostItem and create post page
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
