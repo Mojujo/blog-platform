@@ -12,6 +12,7 @@ import se.mojujo.blogservice.post.AuthenticatedUserDetails;
 import se.mojujo.blogservice.util.LogUtil;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
 
@@ -71,6 +72,35 @@ public class FileStorageService {
                     "IMAGE_UPLOAD_FAILED",
                     "Image upload has encountered an error");
             throw new FileStorageException("Failed to upload media");
+        }
+    }
+
+    public void deleteFile(String imageUrl) {
+        if (imageUrl == null || imageUrl.isBlank()) {
+            return;
+        }
+
+        try {
+            String key = imageUrl.replace(publicBaseUrl + "/", "");
+
+            DeleteObjectRequest request = DeleteObjectRequest.builder()
+                    .bucket(bucket)
+                    .key(key)
+                    .build();
+
+            s3Client.deleteObject(request);
+
+            LogUtil.info(logger,
+                    "IMAGE_DELETED",
+                    "Image was successfully deleted from S3 bucket",
+                    "imageUrl", imageUrl);
+
+        } catch (S3Exception e) {
+
+            LogUtil.info(logger,
+                    "IMAGE_DELETION_FAILED",
+                    "Failed to delete image from S3 bucket",
+                    "error", e.getMessage(), "imageUrl", imageUrl);
         }
     }
 }
