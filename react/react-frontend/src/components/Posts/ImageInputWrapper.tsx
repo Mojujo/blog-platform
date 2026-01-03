@@ -1,11 +1,12 @@
 import {useState} from "react";
+import styles from "./ImageInputWrapper.module.css"
 
 interface Props {
     onFileSelect: (file: File) => void;
     children: React.ReactNode;
 }
 
-export const ImageUploadWrapper: React.FC<Props> = ({ onFileSelect, children }) => {
+export const ImageInputWrapper: React.FC<Props> = ({ onFileSelect, children }) => {
     const [isDragging, setIsDragging] = useState(false);
 
     const handleFiles = (files: FileList | null) => {
@@ -16,7 +17,7 @@ export const ImageUploadWrapper: React.FC<Props> = ({ onFileSelect, children }) 
     };
 
     return (
-        <div
+        <div className={styles.inputWrapper}
             onPaste={(e) => handleFiles(e.clipboardData.files)}
             onDrop={(e) => { e.preventDefault(); setIsDragging(false); handleFiles(e.dataTransfer.files); }}
             onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
