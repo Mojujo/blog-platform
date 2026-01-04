@@ -15,4 +15,4 @@ spring:
             - id: blog-service
               uri: ${BLOG_SERVICE_URI:http://localhost:8081}
               predicates:
-                - Path=/post/**, /post
+                - Path=/post/**, /post, /files/**

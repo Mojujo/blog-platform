@@ -44,7 +44,7 @@ public class AppSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                // CSRF Enabled, token stored in cookie
+                // CSRF Enabled, token stored in a cookie
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .csrfTokenRequestHandler(csrfTokenRequestAttributeHandler())
@@ -53,7 +53,7 @@ public class AppSecurityConfig {
                 // Route Authorization
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/post/feed").permitAll()
-                        .requestMatchers("/post", "/post/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/post", "/post/**", "/files/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
                 )
 

@@ -1,21 +1,23 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useCreatePost } from "../hooks/useCreatePost";
 import styles from "./CreatePost.module.css"
 import { useScreen } from "../context/ScreenContext";
 import { uploadImageUtil } from "../util/uploadImageUtil";
+import { ImageInputWrapper } from "../components/Posts/ImageInputWrapper";
+import { useImageInput } from "../hooks/useImageInput";
 
 export default function () {
 
     const { setScreen } = useScreen();
     const { createPost, loading, error } = useCreatePost();
+    const { imageFile, imagePreview, selectImage, removeImage } = useImageInput();
 
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
-    const [imageFile, setImageFile] = useState<File | null>(null);
-    const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [uploading, setUploading] = useState(false);
 
 
+    // TODO Extract create post into component / hook to reuse in PostItem and create post page
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -25,10 +27,7 @@ export default function () {
             let uploadedImageUrl: string | undefined;
 
             if (imageFile) {
-                uploadedImageUrl = await uploadImageUtil(
-                    imageFile,
-                    "temp-user-id" // TODO REPLACE
-                );
+                uploadedImageUrl = await uploadImageUtil(imageFile);
             }
 
             const payload = { title, content, imageUrl: uploadedImageUrl || undefined };
@@ -37,6 +36,7 @@ export default function () {
             if (result) {
                 setScreen("profile")
             }
+
         } catch (err: any) {
             console.error("Failed to create post", err)
         } finally {
@@ -44,17 +44,9 @@ export default function () {
         }
     };
 
-    useEffect(() => {
-        return () => {
-            if (imagePreview) {
-                URL.revokeObjectURL(imagePreview);
-            }
-        };
-    }, [imagePreview]);
-
     return (
         <>
-            <div className={styles.formContainer}>
+            <ImageInputWrapper onFileSelect={selectImage}>
                 <h2>Create Post</h2>
                 <form className={styles.formInput}
                     onSubmit={handleSubmit}>
@@ -78,17 +70,20 @@ export default function () {
                         accept="image/*"
                         onChange={(e) => {
                             const file = e.target.files?.[0];
-                            if (!file) return;
-
-                            setImageFile(file);
-                            setImagePreview(URL.createObjectURL(file));
+                            if (file) {
+                                selectImage(file);
+                            }
                         }}
                     />
 
                     {imagePreview && (
-                        <img src={imagePreview}
-                            alt="preview"
-                        />
+                        <>
+                            <img src={imagePreview}
+                                alt="preview"
+                            />
+                            <button type="button" onClick={removeImage}>Remove image</button>
+                        </>
+
                     )}
 
                     {error && <p> {error} </p>}
@@ -100,7 +95,7 @@ export default function () {
                         <p>{uploading ? "Uploading image..." : loading ? "Publishing..." : "Publish"}</p>
                     </button>
                 </form>
-            </div>
+            </ImageInputWrapper>
         </>
     )
 }

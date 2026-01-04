@@ -24,10 +24,7 @@ import se.mojujo.blogservice.repository.BlogPostRepository;
 import se.mojujo.blogservice.util.LogUtil;
 
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class BlogPostService {
@@ -37,12 +34,14 @@ public class BlogPostService {
     private final BlogPostRepository blogPostRepository;
     private final BlogPostMapper blogPostMapper;
     private final AuditService auditService;
+    private final FileStorageService fileStorageService;
 
     @Autowired
-    public BlogPostService(BlogPostRepository blogPostRepository, BlogPostMapper blogPostMapper, AuditService auditService) {
+    public BlogPostService(BlogPostRepository blogPostRepository, BlogPostMapper blogPostMapper, AuditService auditService, FileStorageService fileStorageService) {
         this.blogPostRepository = blogPostRepository;
         this.blogPostMapper = blogPostMapper;
         this.auditService = auditService;
+        this.fileStorageService = fileStorageService;
     }
 
     @Transactional
@@ -106,6 +105,16 @@ public class BlogPostService {
             throw new BlogPostAccessDeniedException("User is not allowed to update this post");
         }
 
+        String oldImageUrl = post.getImageUrl();
+        String newImageUrl = dto.imageUrl();
+
+        // If the image URL has changed (removed or updated), a file deletion will be called
+        if (!Objects.equals(oldImageUrl, newImageUrl)) {
+            if (oldImageUrl != null && !oldImageUrl.isBlank()) {
+                fileStorageService.deleteFile(oldImageUrl);
+            }
+        }
+
         post.setTitle(dto.title());
         post.setContent(dto.content());
         post.setImageUrl(dto.imageUrl());
@@ -148,6 +157,11 @@ public class BlogPostService {
                     "postId", postId, "userId", user.getUserId(), "ownerId", post.getUserId());
 
             throw new SecurityException("Cannot delete another user's post");
+        }
+
+        // Cleanup image from storage before deleting post
+        if (post.getImageUrl() != null && !post.getImageUrl().isBlank()) {
+            fileStorageService.deleteFile(post.getImageUrl());
         }
 
         blogPostRepository.delete(post);
