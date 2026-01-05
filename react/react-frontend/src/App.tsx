@@ -6,6 +6,7 @@ import NavHeader from './components/Navigation/NavHeader';
 import Profile from './pages/Profile';
 import CreatePost from './pages/CreatePost';
 import { useScreen } from './context/ScreenContext';
+import Sidebar from './components/Navigation/Sidebar';
 
 function App() {
   const { screen } = useScreen();
@@ -13,14 +14,14 @@ function App() {
   return (
     <>
       <NavHeader />
-
-      <main>
+      <div className="contentWrapper">
+        <Sidebar />
         {screen === "home" && <Home />}
         {screen === "login" && <Login />}
         {screen === "register" && <Register />}
         {screen === "profile" && <Profile />}
         {screen === "createPost" && <CreatePost />}
-      </main>
+      </div>
     </>
   )
 }

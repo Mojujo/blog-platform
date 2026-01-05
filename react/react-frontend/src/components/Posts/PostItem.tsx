@@ -5,6 +5,7 @@ import { uploadImageUtil } from "../../util/uploadImageUtil";
 import { ImageInputWrapper } from "./ImageInputWrapper";
 import styles from "./PostItem.module.css"
 import { PostMenu } from "./PostMenu";
+import { useAuth } from "../../context/AuthContext";
 
 type Props = {
     post: Post;
@@ -15,6 +16,7 @@ type Props = {
 
 export default function PostItem({ post, onEdit, onDelete, showAuthor }: Props) {
 
+    const { user } = useAuth();
     const { imageFile, imagePreview, shouldRemoveImage, selectImage, removeImage, resetImage } = useImageInput(post.imageUrl);
 
     const [isEditing, setIsEditing] = useState(false);
@@ -103,7 +105,7 @@ export default function PostItem({ post, onEdit, onDelete, showAuthor }: Props) 
                         {new Date(post.createdDate).toLocaleString()}
                     </small>
 
-                    {post.isOwner && (
+                    {user && post.isOwner && (
                         <PostMenu
                             onEdit={() => setIsEditing(true)}
                             onDelete={() => onDelete?.(post.id)}

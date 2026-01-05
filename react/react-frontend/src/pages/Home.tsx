@@ -2,7 +2,6 @@ import PostItem from "../components/Posts/PostItem";
 import { useFeed } from "../hooks/useFeed";
 import { useEditDeletePost } from "../hooks/useEditDeletePost";
 import styles from "./Home.module.css";
-import Sidebar from "../components/Navigation/Sidebar";
 import Explore from "../components/Navigation/Explore";
 
 export default function Home() {
@@ -11,32 +10,26 @@ export default function Home() {
 
     return (
         <>
-            <h1 className={styles.topBar}>Recent Posts</h1>
-            <div className={styles.feedContainer}>
-                <Sidebar />
+            <ul className={styles.feedList}>
+                {posts.length === 0 && !loading && <p>No posts yet</p>}
 
-                <ul className={styles.feedList}>
-                    {posts.length === 0 && !loading && <p>No posts yet</p>}
+                {loading && <p>Loading... </p>}
 
-                    {loading && <p>Loading... </p>}
+                {posts.map(post => (
+                    <PostItem
+                        key={post.id}
+                        post={post}
+                        onEdit={editPost}
+                        onDelete={deletePost}
+                        showAuthor={true}
+                    />
+                ))}
 
-                    {posts.map(post => (
-                        <PostItem
-                            key={post.id}
-                            post={post}
-                            onEdit={editPost}
-                            onDelete={deletePost}
-                            showAuthor={true}
-                        />
-                    ))}
-
-                    {hasMore && !loading && (
-                        <button onClick={() => fetchPosts(page + 1)}>Load more</button>
-                    )}
-                </ul>
-
-                <Explore />
-            </div>
+                {hasMore && !loading && (
+                    <button onClick={() => fetchPosts(page + 1)}>Load more</button>
+                )}
+            </ul>
+            <Explore />
         </>
     )
 }
