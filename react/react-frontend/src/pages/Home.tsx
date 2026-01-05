@@ -14,7 +14,7 @@ export default function Home() {
 
                 {posts.length === 0 && !loading && <p>No posts yet</p>}
 
-                <ul>
+                <ul className={styles.feedList}>
                     {posts.map(post => (
                         <PostItem
                             key={post.id}

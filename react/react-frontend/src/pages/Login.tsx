@@ -16,6 +16,7 @@ export default function Login() {
 
         if (success) {
             setMessage("Welcome");
+            setScreen("home");
         } else {
             setMessage("Login failed");
         }
@@ -39,7 +40,6 @@ export default function Login() {
                 />
                 <button onClick={async () => {
                     await handleLogin();
-                    setScreen("home");
                 }}>Login</button>
                 <p>{message}</p>
             </div>

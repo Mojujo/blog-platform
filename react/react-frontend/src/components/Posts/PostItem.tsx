@@ -3,6 +3,8 @@ import { Post } from "../../types/Post";
 import { useImageInput } from "../../hooks/useImageInput";
 import { uploadImageUtil } from "../../util/uploadImageUtil";
 import { ImageInputWrapper } from "./ImageInputWrapper";
+import styles from "./PostItem.module.css"
+import { PostMenu } from "./PostMenu";
 
 type Props = {
     post: Post;
@@ -43,71 +45,71 @@ export default function PostItem({ post, onEdit, onDelete, showAuthor }: Props) 
     }
 
     return (
-        <li>
+        <li className={styles.postLayout}>
             {isEditing ? (
                 <ImageInputWrapper onFileSelect={selectImage}>
-                    <div>
-                        <input
-                            type="text"
-                            name="edit-title"
-                            value={title}
-                            onChange={e => setTitle(e.target.value)}
-                            placeholder="Title"
-                        />
-                        <textarea
-                            value={content}
-                            name="edit-content"
-                            onChange={e => setContent(e.target.value)}
-                            placeholder="Content"
-                        />
 
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) => {
-                                const file = e.target.files?.[0];
-                                if (file) {
-                                    selectImage(file);
-                                }
-                            }}
-                        />
+                    <input
+                        type="text"
+                        name="edit-title"
+                        value={title}
+                        onChange={e => setTitle(e.target.value)}
+                        placeholder="Title"
+                    />
+                    <textarea
+                        value={content}
+                        name="edit-content"
+                        onChange={e => setContent(e.target.value)}
+                        placeholder="Content"
+                    />
 
-                        {imagePreview && (
-                            <>
-                                <img src={imagePreview} alt="Preview" />
-                                <button type="button" onClick={removeImage}>Remove image</button>
-                            </>
-                        )}
+                    <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                                selectImage(file);
+                            }
+                        }}
+                    />
 
-                        <button onClick={handleSave}>Save</button>
-                        <button onClick={handleCancel}>Cancel</button>
-                    </div>
+                    {imagePreview && (
+                        <>
+                            <img src={imagePreview} alt="Preview" />
+                            <button type="button" onClick={removeImage}>Remove image</button>
+                        </>
+                    )}
+
+                    <button onClick={handleSave}>Save</button>
+                    <button onClick={handleCancel}>Cancel</button>
+
                 </ImageInputWrapper>
             ) : (
                 <>
-                    <div>
-                        <h3>{post.title}</h3>
-                        <p>{post.content}</p>
 
-                        {post.imageUrl && (
-                            <img
-                                src={post.imageUrl}
-                                alt={post.title}
-                            />
-                        )}
+                    <h3>{post.title}</h3>
+                    <p>{post.content}</p>
 
-                        <small>
-                            {showAuthor ? `By ${post.authorUsername} · ` : ""}
-                            {new Date(post.createdDate).toLocaleString()}
-                        </small>
+                    {post.imageUrl && (
+                        <img
+                            src={post.imageUrl}
+                            alt={post.title}
+                        />
+                    )}
 
-                        {post.isOwner && (
-                            <div>
-                                <button onClick={() => setIsEditing(true)}>Edit</button>
-                                <button onClick={() => onDelete?.(post.id)}>Delete</button>
-                            </div>
-                        )}
-                    </div>
+                    <small>
+                        {showAuthor ? `By ${post.authorUsername} · ` : ""}
+                        {new Date(post.createdDate).toLocaleString()}
+                    </small>
+
+                    {post.isOwner && (
+                        <PostMenu
+                            onEdit={() => setIsEditing(true)}
+                            onDelete={() => onDelete?.(post.id)}
+                        />
+                    )}
+
                 </>
             )}
         </li>
