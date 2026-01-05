@@ -1,8 +1,11 @@
+.topBar {
+    justify-self: center;
+    margin-bottom: 10px;
+}
+
 .feedContainer {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+    justify-content: space-between;
 }
 
 .feedList {

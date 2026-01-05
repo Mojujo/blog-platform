@@ -1,0 +1,11 @@
+.exploreContainer {
+    height: 10rem;
+    width: 20%;
+
+    background-color: #2e2e2e;
+    border-radius: 12px 0 0 12px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 4px #00000040;
+}
