@@ -9,6 +9,7 @@ export default function Sidebar() {
     return (
         <>
             <div className={styles.sidebarContainer}>
+                <h2>Teknikbloggen</h2>
                 <button className={`${styles.navButton} ${screen === "home" ? styles.active : ""}`}
                     onClick={() => setScreen("home")}>
                     <img src="/assets/home.svg" alt="" className={styles.homeImage} />
@@ -18,6 +19,11 @@ export default function Sidebar() {
                     onClick={() => setScreen("profile")}>
                     <img src="/assets/profile.svg" alt="" className={styles.homeImage} />
                     <h3>Profile</h3>
+                </button>
+                <button className={`${styles.navButton} ${screen === "bookmarks" ? styles.active : ""}`}
+                    onClick={() => setScreen("bookmarks")}>
+                    <img src="/assets/bookmark.svg" alt="" className={styles.homeImage} />
+                    <h3>Bookmarks</h3>
                 </button>
             </div>
         </>

@@ -103,7 +103,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         } catch (err: any) {
             setUser(null);
-            return false;
+            throw err;
         }
     };
 

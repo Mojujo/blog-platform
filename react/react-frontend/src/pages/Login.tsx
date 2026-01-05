@@ -12,13 +12,13 @@ export default function Login() {
     const [message, setMessage] = useState("")
 
     const handleLogin = async () => {
-        const success = await login(username, password);
-
-        if (success) {
+        try {
+            await login(username, password);
             setMessage("Welcome");
             setScreen("home");
-        } else {
-            setMessage("Login failed");
+        } catch (err: any) {
+            const errorMsg =  err.response?.data?.message || "Login failed"
+            setMessage(errorMsg);
         }
     };
 
@@ -34,6 +34,7 @@ export default function Login() {
                 />
                 <input
                     id="password"
+                    type="password"
                     placeholder="Password"
                     value={password}
                     onChange={(string) => setPassword(string.target.value)}

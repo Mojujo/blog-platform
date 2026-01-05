@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useContext, useState } from "react";
 
-export type Screen = "home" | "login" | "register" | "profile" | "createPost";
+export type Screen = "home" | "login" | "register" | "profile" | "createPost" | "bookmarks";
 
 type ScreenContextType = {
     screen: Screen;
