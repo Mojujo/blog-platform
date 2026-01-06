@@ -1,23 +1,37 @@
 import { useAuth } from "../../context/AuthContext";
 import { useScreen } from "../../context/ScreenContext";
+import { useProfile } from "../../hooks/useProfile";
 import styles from "./Explore.module.css"
 
 export default function Explore() {
 
     const { setScreen } = useScreen();
     const { user, logout } = useAuth();
+    const { profile } = useProfile();
 
     return (
         <>
             <div className={styles.exploreContainer}>
+                {user && (
+                    <>
+                        <button className={styles.profileShortcut}
+                            onClick={() => setScreen("profile")}>
+                            <img
+                                src={profile?.profileImageUrl}
+                                alt="Profile"
+                            />
+                        </button>
+                    </>
+                )}
+
                 {!user ? (
                     <>
                         <button className={styles.loginButton}
                             onClick={() => setScreen("login")
 
                             }>
-                            <h3>Login</h3>
                             <img src="/assets/login.svg" alt="" className={styles.accessImage} />
+                            <h3>Login</h3>
                         </button>
                     </>
                 ) : (
@@ -27,8 +41,8 @@ export default function Explore() {
                                 logout();
                                 setScreen("home")
                             }}>
-                            <h3>Logout</h3>
                             <img src="/assets/logout.svg" alt="" className={styles.accessImage} />
+                            <h3>Logout</h3>
                         </button>
                     </>
                 )}

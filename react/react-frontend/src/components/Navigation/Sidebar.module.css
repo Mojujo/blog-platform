@@ -1,6 +1,7 @@
 .sidebarContainer {
     position: sticky;
     top: 1rem;
+    margin-top: 1rem;
     align-self: flex-start;
 
     height: fit-content;
@@ -20,8 +21,6 @@
 .navButton {
     display: flex;
     align-items: center;
-
-    width: 75%;
 
     padding: 12px;
     margin-bottom: 10px;
@@ -50,6 +49,21 @@
 
 .active {
     background-color: #363636;
+}
+
+@media (max-width: 1200px) {
+    .sidebarContainer {
+        justify-self: end;
+        border-radius: 12px;
+        transition: 0.3s ease-in;
+    }
+    .sidebarContainer h3 {
+        display: none;
+    }
+    .navButton img {
+    height: 40px;
+    width: 40px;
+}
 }
 
 @media (max-width: 431px) {

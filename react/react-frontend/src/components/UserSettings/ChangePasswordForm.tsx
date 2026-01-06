@@ -1,5 +1,6 @@
 import { useUserEdit } from "../../hooks/useUserEdit.ts";
 import { useState } from "react";
+import styles from "./UserModifyForm.module.css"
 
 export const ChangePasswordForm = () => {
     const { changePassword, status, error } = useUserEdit();
@@ -19,8 +20,9 @@ export const ChangePasswordForm = () => {
 
     return (
         <>
-            <div>
+            <div className={styles.passwordForm}>
                 <h3>Change Password</h3>
+
                 <input
                     value={oldPassword}
                     name="password-old-edit"
@@ -35,8 +37,11 @@ export const ChangePasswordForm = () => {
                     placeholder="New Password"
                     type="password"
                 />
-                <button onClick={submit} disabled={status === "loading" || !oldPassword || !newPassword}>Update Password
-                </button>
+                <div>
+                    <button onClick={submit} disabled={status === "loading" || !oldPassword || !newPassword}>Update Password
+                    </button>
+                </div>
+
                 {success && <p>Password updated. You are being logged out.</p>}
                 {error && <p>{error}</p>} </div>
         </>

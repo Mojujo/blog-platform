@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useUserEdit } from "../../hooks/useUserEdit"
 import { useImageInput } from "../../hooks/useImageInput";
+import styles from "./UserModifyForm.module.css"
 
 export const ChangeProfilePictureForm = () => {
 

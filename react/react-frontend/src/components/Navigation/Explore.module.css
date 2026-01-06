@@ -1,9 +1,13 @@
 .exploreContainer {
   position: sticky;
   top: 1rem;
-  align-self: flex-start;
+  margin-top: 1rem;
 
+  align-self: flex-start;
   height: fit-content;
+
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
 
   grid-column: span 3;
 
@@ -14,19 +18,29 @@
 }
 
 .exploreContainer h3 {
-    padding-right: 12px;
-    font-size: 20px;
-    font-weight: 600;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.profileShortcut {
+  background: none;
+  border: none;
+  border-radius: 100%;
+  cursor: pointer;
+}
+
+.profileShortcut img {
+  width: fit-content;
+  height: auto;
+  border-radius: 100%;
 }
 
 .loginButton,
 .logoutButton {
-  display: flex;
-  justify-self: right;
+  justify-self: center;
   align-items: center;
 
   padding: 12px;
-  margin-bottom: 10px;
 
   background: none;
   border: none;
@@ -35,15 +49,19 @@
   cursor: pointer;
 }
 
-.loginButton img,
-.logoutButton img {
+.accessImage {
   width: 60px;
   height: 60px;
 }
 
-.loginButton:hover,
-.logoutButton:hover {
+.accessImage:hover {
   background-color: #3d3d3d;
+}
+
+@media (max-width: 1200px) {
+  .exploreContainer {
+    display: none;
+  }
 }
 
 @media (max-width: 431px) {

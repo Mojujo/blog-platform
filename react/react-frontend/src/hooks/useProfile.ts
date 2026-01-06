@@ -7,7 +7,7 @@ export interface UserProfile {
     username: string;
     email: string;
     roles: string[];
-    profileImageUrl: string | null;
+    profileImageUrl: string;
 }
 
 export const useProfile = () => {

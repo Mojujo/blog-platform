@@ -9,7 +9,6 @@ export default function Sidebar() {
     return (
         <>
             <div className={styles.sidebarContainer}>
-                <h2>Teknikbloggen</h2>
                 <button className={`${styles.navButton} ${screen === "home" ? styles.active : ""}`}
                     onClick={() => setScreen("home")}>
                     <img src="/assets/home.svg" alt="" className={styles.homeImage} />

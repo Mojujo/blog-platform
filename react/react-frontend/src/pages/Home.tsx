@@ -29,7 +29,6 @@ export default function Home() {
                     <button onClick={() => fetchPosts(page + 1)}>Load more</button>
                 )}
             </ul>
-            <Explore />
         </>
     )
 }
