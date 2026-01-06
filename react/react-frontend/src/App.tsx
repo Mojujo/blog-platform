@@ -2,7 +2,6 @@ import './App.css'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
-import NavHeader from './components/Navigation/NavHeader';
 import Profile from './pages/Profile';
 import CreatePost from './pages/CreatePost';
 import { useScreen } from './context/ScreenContext';
@@ -13,7 +12,6 @@ function App() {
 
   return (
     <>
-      <NavHeader />
       <div className="contentWrapper">
         <Sidebar />
         {screen === "home" && <Home />}

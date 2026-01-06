@@ -1,16 +1,49 @@
 .exploreContainer {
-    position: sticky;
-    top: 1rem;
-    align-self: flex-start;
+  position: sticky;
+  top: 1rem;
+  align-self: flex-start;
 
-    height: fit-content;
+  height: fit-content;
 
-    grid-column: span 3;
+  grid-column: span 3;
 
-    background-color: #2e2e2e;
-    border-radius: 12px 0 0 12px;
-    padding: 1rem;
-    box-shadow: 0 4px 4px #00000040;
+  background-color: #2e2e2e;
+  border-radius: 12px 0 0 12px;
+  padding: 1rem;
+  box-shadow: 0 4px 4px #00000040;
+}
+
+.exploreContainer h3 {
+    padding-right: 12px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.loginButton,
+.logoutButton {
+  display: flex;
+  justify-self: right;
+  align-items: center;
+
+  padding: 12px;
+  margin-bottom: 10px;
+
+  background: none;
+  border: none;
+  border-radius: 40px;
+
+  cursor: pointer;
+}
+
+.loginButton img,
+.logoutButton img {
+  width: 60px;
+  height: 60px;
+}
+
+.loginButton:hover,
+.logoutButton:hover {
+  background-color: #3d3d3d;
 }
 
 @media (max-width: 431px) {
