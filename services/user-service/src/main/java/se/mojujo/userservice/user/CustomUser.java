@@ -20,6 +20,7 @@ public class CustomUser {
     @Column(unique = true, nullable = false)
     private String email;
     private String password;
+    private String profileImageUrl = "https://noinjlyuljccnqyiqrbr.supabase.co/storage/v1/object/public/post-images/default_profile_picture/Default_pfp.png";
 
     private boolean isAccountNonExpired = true;
     private boolean isAccountNonLocked = true;
@@ -119,5 +120,13 @@ public class CustomUser {
 
     public void setRoles(Set<UserRole> roles) {
         this.roles = roles;
+    }
+
+    public String getProfileImageUrl() {
+        return profileImageUrl;
+    }
+
+    public void setProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
     }
 }

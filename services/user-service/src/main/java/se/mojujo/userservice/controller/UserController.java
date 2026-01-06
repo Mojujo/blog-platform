@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import se.mojujo.userservice.user.CustomUser;
 import se.mojujo.userservice.user.CustomUserDetails;
 import se.mojujo.userservice.service.CustomUserService;
@@ -45,7 +46,7 @@ public class UserController {
         return ResponseEntity.ok(responseDTO);
     }
 
-    // Endpoint to make sure CSRF-tokens are securely generated on frontend
+    // Endpoint to make sure CSRF-tokens are securely generated on the frontend
     @GetMapping("/csrf")
     public void getCsrfToken() {
         // No body needed; CsrfCookieFilter will set the XSRF-TOKEN cookie for frontend use
@@ -77,6 +78,16 @@ public class UserController {
         UUID userId = ((CustomUserDetails) authentication.getPrincipal()).getCustomUser().getId();
 
         customUserService.changePassword(userId, request.oldPassword(), request.newPassword());
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/profile-picture")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public ResponseEntity<Void> changeProfilePicture(@RequestParam("file") MultipartFile imageFile, Authentication authentication) {
+        UUID userId = ((CustomUserDetails) authentication.getPrincipal()).getCustomUser().getId();
+
+        customUserService.changeProfilePicture(userId, imageFile);
 
         return ResponseEntity.noContent().build();
     }

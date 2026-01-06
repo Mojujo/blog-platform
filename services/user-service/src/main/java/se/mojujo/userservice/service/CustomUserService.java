@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import se.mojujo.userservice.exception.EmailAlreadyExistsException;
 import se.mojujo.userservice.exception.InvalidCredentialsException;
 import se.mojujo.userservice.exception.UserNotFoundException;
@@ -20,6 +21,7 @@ import se.mojujo.userservice.util.LogUtil;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -32,13 +34,15 @@ public class CustomUserService {
     private final PasswordEncoder passwordEncoder;
     private final CustomUserMapper customUserMapper;
     private final RabbitService rabbitService;
+    private final FileStorageService fileStorageService;
 
     @Autowired
-    public CustomUserService(CustomUserRepository customUserRepository, PasswordEncoder passwordEncoder, CustomUserMapper customUserMapper, RabbitService rabbitService) {
+    public CustomUserService(CustomUserRepository customUserRepository, PasswordEncoder passwordEncoder, CustomUserMapper customUserMapper, RabbitService rabbitService, FileStorageService fileStorageService) {
         this.customUserRepository = customUserRepository;
         this.passwordEncoder = passwordEncoder;
         this.customUserMapper = customUserMapper;
         this.rabbitService = rabbitService;
+        this.fileStorageService = fileStorageService;
     }
 
     @Transactional
@@ -104,7 +108,7 @@ public class CustomUserService {
         rabbitService.sendAuditEvent(
                 "USERNAME_CHANGED",
                 Map.of("userId", user.getId(), "newUsername", newUsername)
-         );
+        );
     }
 
     @Transactional
@@ -153,5 +157,27 @@ public class CustomUserService {
 
         rabbitService.sendAuditEvent("PASSWORD_CHANGED",
                 Map.of("userId", user.getId()));
+    }
+
+    @Transactional
+    public void changeProfilePicture(UUID userId, MultipartFile file) {
+        CustomUser user = customUserRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        String DEFAULT_PICTURE = "https://noinjlyuljccnqyiqrbr.supabase.co/storage/v1/object/public/post-images/default_profile_picture/Default_pfp.png";
+        if (!Objects.equals(DEFAULT_PICTURE, user.getProfileImageUrl())) {
+            if (user.getProfileImageUrl() != null && !user.getProfileImageUrl().isBlank()) {
+                fileStorageService.deleteFile(user.getProfileImageUrl());
+            }
+        }
+
+        String imageUrl = fileStorageService.uploadFile(userId, file);
+        user.setProfileImageUrl(imageUrl);
+        customUserRepository.save(user);
+
+        LogUtil.info(logger,
+                "PROFILE_PICTURE_CHANGED",
+                "Profile picture changed successfully",
+                "userId", user.getId());
     }
 }

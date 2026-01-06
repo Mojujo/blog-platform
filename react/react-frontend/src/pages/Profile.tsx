@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { useScreen } from "../context/ScreenContext.tsx";
 import PostItem from "../components/Posts/PostItem.tsx";
 import { useEditDeletePost } from "../hooks/useEditDeletePost.ts";
+import { ChangeProfilePictureForm } from "../components/UserSettings/ChangeProfilePictureForm.tsx";
 
 export default function Profile() {
 
@@ -35,6 +36,9 @@ export default function Profile() {
                     <p>{profile.email}</p>
                     <p>{profile.roles.join(", ")}</p>
                     <p>{profile.id}</p>
+                    {profile.profileImageUrl && (
+                        <img src={profile.profileImageUrl} alt="Profile picture" />
+                    )}
 
                     <h3>Your posts</h3>
 
@@ -44,6 +48,7 @@ export default function Profile() {
                     <ChangeUsernameForm />
                     <ChangeEmailForm />
                     <ChangePasswordForm />
+                    <ChangeProfilePictureForm />
                 </div>
 
                 {loadingPosts && page === 0 ? (

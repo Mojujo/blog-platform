@@ -20,7 +20,11 @@ public record CustomUserResponseDTO(
         @Email @NotBlank
         String email,
 
+        String profileImageUrl,
+
         @NotNull
         Set<String> roles
+
+
 ) {
 }

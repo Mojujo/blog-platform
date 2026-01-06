@@ -4,6 +4,7 @@ import apiClient from "../api/apiClient";
 
 type User = {
     userId: string;
+    userProfilePictureUrl: string | null;
     username: string;
     roles: string[];
 };
@@ -68,6 +69,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             const response = await apiClient.get("/auth/me");
             setUser({
                 userId: response.data.id,
+                userProfilePictureUrl: response.data.profileImageUrl,
                 username: response.data.username,
                 roles: response.data.roles
             });
@@ -93,6 +95,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
             setUser({
                 userId: response.data.id,
+                userProfilePictureUrl: response.data.profileImageUrl,
                 username: response.data.username,
                 roles: response.data.roles
             });
