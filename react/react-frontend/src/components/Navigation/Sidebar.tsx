@@ -6,7 +6,7 @@ import styles from "./Sidebar.module.css"
 export default function Sidebar() {
 
     const { screen, setScreen } = useScreen();
-    const { user } = useAuth();
+    const { user, logout } = useAuth();
     const { profile } = useProfile();
 
     return (
@@ -36,6 +36,29 @@ export default function Sidebar() {
                                 src={profile?.profileImageUrl}
                                 alt="Profile"
                             />
+                        </button>
+                    </>
+                )}
+
+                {!user ? (
+                    <>
+                        <button className={styles.sidebarLogin}
+                            onClick={() => setScreen("login")
+
+                            }>
+                            <img src="/assets/login.svg" alt="" className={styles.accessImage} />
+                            <h4>Login</h4>
+                        </button>
+                    </>
+                ) : (
+                    <>
+                        <button className={styles.sidebarLogout}
+                            onClick={async () => {
+                                logout();
+                                setScreen("home")
+                            }}>
+                            <img src="/assets/logout.svg" alt="" className={styles.accessImage} />
+                            <h4>Logout</h4>
                         </button>
                     </>
                 )}

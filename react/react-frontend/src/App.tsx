@@ -8,6 +8,7 @@ import { useScreen } from './context/ScreenContext';
 import Sidebar from './components/Navigation/Sidebar';
 import Explore from './components/Navigation/Explore';
 import EditUser from './pages/EditUser';
+import Bookmarks from './pages/Bookmarks';
 
 function App() {
   const { screen } = useScreen();
@@ -22,6 +23,7 @@ function App() {
         {screen === "profile" && <Profile />}
         {screen === "createPost" && <CreatePost />}
         {screen === "editUser" && <EditUser />}
+        {screen === "bookmarks" && <Bookmarks />}
         <Explore />
       </div>
     </>

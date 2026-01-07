@@ -114,10 +114,12 @@ export default function PostItem({ post, onEdit, onDelete, showAuthor }: Props) 
                         {new Date(post.createdDate).toLocaleString()}
                     </small>
 
-                    {user && post.isOwner && (
+                    {user && (
                         <PostMenu
+                            post={post}
                             onEdit={() => setIsEditing(true)}
                             onDelete={() => onDelete?.(post.id)}
+                            isOwner={post.isOwner}
                         />
                     )}
                 </>

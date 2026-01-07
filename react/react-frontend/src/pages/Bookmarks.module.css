@@ -1,0 +1,29 @@
+.bookmarksContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    grid-column: span 10;
+
+    gap: 20px 0;
+    margin-top: 1rem;
+
+    list-style: none;
+    padding: 0;
+}
+
+.bookmarksContainer h3 {
+    text-align: center;
+}
+
+@media (max-width: 431px) {
+  .bookmarksContainer {
+    grid-column: span 4;
+  }
+}
+
+@media (min-width: 1200px) {
+  .bookmarksContainer {
+    grid-column: span 8;
+  }
+}

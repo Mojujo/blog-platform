@@ -7,7 +7,7 @@ import { ImageInputWrapper } from "../components/Posts/ImageInputWrapper";
 import { useImageInput } from "../hooks/useImageInput";
 import { useAutoResizeTextarea } from "../hooks/useAutoResizeTextarea";
 
-export default function () {
+export default function CreatePost() {
 
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");

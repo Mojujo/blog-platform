@@ -1,28 +1,52 @@
 .loginContainer {
     display: flex;
-    align-items: center;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
 
-    margin-bottom: 10px;
+    grid-column: span 10;
+
+    margin-top: 1rem;
+
+    padding: 0;
 }
 
 .loginContainer input {
+    width: fit-content;
+    height: auto;
     margin: 5px 0 5px 0;
 }
 
 .loginContainer button {
-    width: 80px;
-    height: 40px;
+
+    border: none;
+    border-radius: 24px;
+    box-shadow: 0 4px 4px #00000040;
+
     font-size: 20px;
     font-weight: bold;
 
+    cursor: pointer;
+}
+
+.loginContainer button:hover {
+    background-color: #8f8f8f;
+}
+
+.loginButton {
     margin-top: 10px;
+    width: 80px;
+    height: 40px;
 }
 
 .forwardRegister {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+
+    margin-top: 0.5rem;
+    gap: 5px;
 }
 
 .forwardRegister h3 {
@@ -30,6 +54,19 @@
     font-weight: bold;
 }
 
-.forwardRegister button {
-    margin-left: 5px;
+.registerButton {
+    width: 120px;
+    height: 40px;
+}
+
+@media (max-width: 431px) {
+  .loginContainer {
+    grid-column: span 4;
+  }
+}
+
+@media (min-width: 1200px) {
+  .loginContainer {
+    grid-column: span 8;
+  }
 }
