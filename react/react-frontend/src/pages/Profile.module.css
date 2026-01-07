@@ -1,9 +1,15 @@
+.profileContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    grid-column: span 10;
+}
+
 .profileFeedList {
     display: flex;
     flex-direction: column;
     justify-content: center;
-
-    grid-column: span 8;
 
     gap: 20px 0px;
     list-style: none;
@@ -11,13 +17,7 @@
     margin: 0;
 }
 
-.profileContainer {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
 
-    grid-column: span 8;
-}
 
 .profile {
     justify-self: center;
@@ -38,4 +38,16 @@
     height: 40px;
 
     margin: 1rem 5px 0 0;
+}
+
+@media (max-width: 431px) {
+  .profileContainer {
+    grid-column: span 4;
+  }
+}
+
+@media (min-width: 1200px) {
+  .profileContainer{
+    grid-column: span 8;
+  }
 }

@@ -6,7 +6,7 @@ import styles from "./UserModifyForm.module.css"
 export const ChangeProfilePictureForm = () => {
 
     const { changeProfilePicture, status, error } = useUserEdit();
-    const { imageFile, imagePreview, selectImage, resetImage } = useImageInput();
+    const { imageFile, imagePreview, removeImage, selectImage, resetImage } = useImageInput();
 
     const [success, setSuccess] = useState(false);
 
@@ -23,34 +23,39 @@ export const ChangeProfilePictureForm = () => {
 
     return (
         <>
-        <div>
-            <h3>Change Profile Picture</h3>
+            <div className={styles.profilePictureForm}>
+                <h3>Change Profile Picture</h3>
 
-            {imagePreview && (
-                <img src={imagePreview} alt="" />
-            )}
-            
-            <input
-                type="file"
-                accept="image/*"
-                onChange={e => e.target.files && selectImage(e.target.files[0])}
-            />
+                {imagePreview && (
+                    <div className={styles.imagePreviewWrapper}>
+                        <img src={imagePreview} alt="Preview" className={styles.imagePreview} />
+                        <button type="button" onClick={removeImage} className={styles.removeImageButton}>
+                            <img src="/assets/cross.svg" alt="" />
+                        </button>
+                    </div>
+                )}
 
-            <div>
-                <button
-                    onClick={submit}
-                    disabled={status === "loading" || !imageFile}
-                >
-                    Update
-                </button>
-                <button type="button" onClick={resetImage}>
-                    Cancel
-                </button>
+                <input
+                    type="file"
+                    accept="image/*"
+                    onChange={e => e.target.files && selectImage(e.target.files[0])}
+                />
+
+                <div>
+                    <button
+                        onClick={submit}
+                        disabled={status === "loading" || !imageFile}
+                    >
+                        Update
+                    </button>
+                    <button type="button" onClick={resetImage}>
+                        Cancel
+                    </button>
+                </div>
+
+                {success && <p>Profile picture updated</p>}
+                {error && <p>{error}</p>}
             </div>
-
-            {success && <p>Profile picture updated</p>}
-            {error && <p>{error}</p>}
-        </div>
         </>
     )
 }

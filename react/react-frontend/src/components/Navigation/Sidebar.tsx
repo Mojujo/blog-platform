@@ -1,10 +1,13 @@
+import { useAuth } from "../../context/AuthContext";
 import { useScreen } from "../../context/ScreenContext";
+import { useProfile } from "../../hooks/useProfile";
 import styles from "./Sidebar.module.css"
 
 export default function Sidebar() {
 
     const { screen, setScreen } = useScreen();
-
+    const { user, logout } = useAuth();
+    const { profile } = useProfile();
 
     return (
         <>
@@ -24,6 +27,18 @@ export default function Sidebar() {
                     <img src="/assets/bookmark.svg" alt="" className={styles.homeImage} />
                     <h3>Bookmarks</h3>
                 </button>
+
+                {user && (
+                    <>
+                        <button className={styles.sidebarProfile}
+                            onClick={() => setScreen("profile")}>
+                            <img
+                                src={profile?.profileImageUrl}
+                                alt="Profile"
+                            />
+                        </button>
+                    </>
+                )}
             </div>
         </>
     )

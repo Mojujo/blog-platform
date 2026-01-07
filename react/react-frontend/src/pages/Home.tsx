@@ -2,7 +2,6 @@ import PostItem from "../components/Posts/PostItem";
 import { useFeed } from "../hooks/useFeed";
 import { useEditDeletePost } from "../hooks/useEditDeletePost";
 import styles from "./Home.module.css";
-import Explore from "../components/Navigation/Explore";
 
 export default function Home() {
     const { posts, setPosts, loading, fetchPosts, page, hasMore } = useFeed();

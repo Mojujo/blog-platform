@@ -37,10 +37,9 @@ export const ChangePasswordForm = () => {
                     placeholder="New Password"
                     type="password"
                 />
-                <div>
-                    <button onClick={submit} disabled={status === "loading" || !oldPassword || !newPassword}>Update Password
-                    </button>
-                </div>
+                <button onClick={submit} disabled={status === "loading" || !oldPassword || !newPassword}>Update
+                </button>
+
 
                 {success && <p>Password updated. You are being logged out.</p>}
                 {error && <p>{error}</p>} </div>

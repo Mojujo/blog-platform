@@ -1,25 +1,22 @@
-.feedList {
+.editContainer {
     display: flex;
     flex-direction: column;
     justify-content: center;
 
+
     grid-column: span 10;
 
-    gap: 20px 0px;
     margin-top: 1rem;
-
-    list-style: none;
-    padding: 0;
 }
 
 @media (max-width: 431px) {
-  .feedList {
+  .editContainer {
     grid-column: span 4;
   }
 }
 
 @media (min-width: 1200px) {
-  .feedList {
+  .editContainer {
     grid-column: span 8;
   }
 }

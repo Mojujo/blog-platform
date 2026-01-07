@@ -5,17 +5,18 @@ import { useScreen } from "../context/ScreenContext";
 import { uploadImageUtil } from "../util/uploadImageUtil";
 import { ImageInputWrapper } from "../components/Posts/ImageInputWrapper";
 import { useImageInput } from "../hooks/useImageInput";
+import { useAutoResizeTextarea } from "../hooks/useAutoResizeTextarea";
 
 export default function () {
-
-    const { setScreen } = useScreen();
-    const { createPost, loading, error } = useCreatePost();
-    const { imageFile, imagePreview, selectImage, removeImage } = useImageInput();
 
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [uploading, setUploading] = useState(false);
 
+    const { ref: contentRef } = useAutoResizeTextarea(content);
+    const { setScreen } = useScreen();
+    const { createPost, loading, error } = useCreatePost();
+    const { imageFile, imagePreview, selectImage, removeImage } = useImageInput();
 
     // TODO Extract create post into component / hook to reuse in PostItem and create post page
     const handleSubmit = async (e: React.FormEvent) => {
@@ -46,10 +47,10 @@ export default function () {
 
     return (
         <>
-            <ImageInputWrapper onFileSelect={selectImage}>
-                <h2>Create Post</h2>
-                <form className={styles.formInput}
-                    onSubmit={handleSubmit}>
+            <form className={styles.formInput}
+                onSubmit={handleSubmit}>
+                <ImageInputWrapper onFileSelect={selectImage}>
+                    <h2>Create Post</h2>
                     <input
                         id="title"
                         placeholder="Title"
@@ -57,12 +58,12 @@ export default function () {
                         onChange={(string) => setTitle(string.target.value)}
                     />
                     <textarea
+                        ref={contentRef}
                         id="content"
                         name="content"
                         placeholder="Text"
                         value={content}
                         onChange={(string) => setContent(string.target.value)}
-                        rows={10}
                         required
                     />
                     <input
@@ -88,14 +89,14 @@ export default function () {
 
                     {error && <p> {error} </p>}
 
-                    <button
+                    <button className={styles.submitButton}
                         type="submit"
                         disabled={loading || uploading}
                     >
                         <p>{uploading ? "Uploading image..." : loading ? "Publishing..." : "Publish"}</p>
                     </button>
-                </form>
-            </ImageInputWrapper>
+                </ImageInputWrapper>
+            </form>
         </>
     )
 }

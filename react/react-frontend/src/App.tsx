@@ -7,6 +7,7 @@ import CreatePost from './pages/CreatePost';
 import { useScreen } from './context/ScreenContext';
 import Sidebar from './components/Navigation/Sidebar';
 import Explore from './components/Navigation/Explore';
+import EditUser from './pages/editUser';
 
 function App() {
   const { screen } = useScreen();
@@ -20,6 +21,7 @@ function App() {
         {screen === "register" && <Register />}
         {screen === "profile" && <Profile />}
         {screen === "createPost" && <CreatePost />}
+        {screen === "editUser" && <EditUser />}
         <Explore />
       </div>
     </>
