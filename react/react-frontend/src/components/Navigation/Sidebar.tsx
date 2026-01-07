@@ -6,7 +6,7 @@ import styles from "./Sidebar.module.css"
 export default function Sidebar() {
 
     const { screen, setScreen } = useScreen();
-    const { user, logout } = useAuth();
+    const { user } = useAuth();
     const { profile } = useProfile();
 
     return (
