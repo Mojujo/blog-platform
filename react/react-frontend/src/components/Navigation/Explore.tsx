@@ -9,15 +9,16 @@ export default function Explore() {
     const { user, logout } = useAuth();
     const { profile } = useProfile();
 
+
     return (
         <>
             <div className={styles.exploreContainer}>
-                {user && (
+                {user && profile && (
                     <>
                         <button className={styles.profileShortcut}
                             onClick={() => setScreen("profile")}>
                             <img
-                                src={profile?.profileImageUrl}
+                                src={`${profile.profileImageUrl}?t=${Date.now()}`}
                                 alt="Profile"
                             />
                         </button>

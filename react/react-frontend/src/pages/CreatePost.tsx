@@ -78,13 +78,12 @@ export default function CreatePost() {
                     />
 
                     {imagePreview && (
-                        <>
-                            <img src={imagePreview}
-                                alt="preview"
-                            />
-                            <button type="button" onClick={removeImage}>Remove image</button>
-                        </>
-
+                        <div className={styles.imagePreviewWrapper}>
+                            <img src={imagePreview} alt="Preview" className={styles.imagePreview} />
+                            <button type="button" onClick={removeImage} className={styles.removeImageButton}>
+                                <img src="/assets/cross.svg" alt="" />
+                            </button>
+                        </div>
                     )}
 
                     {error && <p> {error} </p>}
