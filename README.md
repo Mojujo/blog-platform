@@ -21,7 +21,7 @@ The microservice communicates through an API-Gateway to ensure optimal security 
 - PostgreSQL persistence (local or Supabase)
 - API Gateway for seamless requests
 - RabbitMQ event handling and event-log database persistence
-- Native React SPA served through Nginx for ease of testing
+- React SPA served through Nginx for ease of testing
 - Docker support
 
 ## Project Structure
@@ -66,7 +66,7 @@ blog-platform/react/react-frontend
 - PostgreSQL
 - JWT
 - RabbitMQ
-- React Native
+- React
 - Nginx
 - Maven
 - Docker / Docker Compose
