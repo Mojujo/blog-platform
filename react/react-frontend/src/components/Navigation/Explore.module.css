@@ -1,0 +1,71 @@
+.exploreContainer {
+  position: sticky;
+  top: 1rem;
+  margin-top: 1rem;
+
+  align-self: flex-start;
+  height: fit-content;
+
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+
+  grid-column: span 3;
+
+  background-color: #2e2e2e;
+  border-radius: 12px 0 0 12px;
+  padding: 1rem;
+  box-shadow: 0 4px 4px #00000040;
+}
+
+.exploreContainer h3 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.profileShortcut {
+  background: none;
+  border: none;
+  border-radius: 100%;
+  cursor: pointer;
+}
+
+.profileShortcut img {
+  width: 120px;
+  height: 120px;
+  border-radius: 100%;
+}
+
+.loginButton,
+.logoutButton {
+  justify-self: center;
+  align-items: center;
+
+  padding: 12px;
+
+  background: none;
+  border: none;
+  border-radius: 40px;
+
+  cursor: pointer;
+}
+
+.accessImage {
+  width: 60px;
+  height: 60px;
+}
+
+.accessImage:hover {
+  background-color: #3d3d3d;
+}
+
+@media (max-width: 1200px) {
+  .exploreContainer {
+    display: none;
+  }
+}
+
+@media (max-width: 431px) {
+  .exploreContainer {
+    grid-column: span 2;
+  }
+}

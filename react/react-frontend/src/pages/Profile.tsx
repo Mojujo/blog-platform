@@ -1,9 +1,6 @@
 import { useProfileFeed } from "../hooks/useProfileFeed";
 import { useProfile } from "../hooks/useProfile";
 import styles from "./Profile.module.css"
-import { ChangeUsernameForm } from "../components/UserSettings/ChangeUsernameForm";
-import { ChangeEmailForm } from "../components/UserSettings/ChangeEmailForm";
-import { ChangePasswordForm } from "../components/UserSettings/ChangePasswordForm.tsx";
 import { useAuth } from "../context/AuthContext.tsx";
 import { useEffect } from "react";
 import { useScreen } from "../context/ScreenContext.tsx";
@@ -12,10 +9,10 @@ import { useEditDeletePost } from "../hooks/useEditDeletePost.ts";
 
 export default function Profile() {
 
-    const { setScreen } = useScreen(); 
+    const { setScreen } = useScreen();
     const { profile, loading: loadingProfile } = useProfile();
     const { posts, setPosts, loading: loadingPosts, fetchPosts, page, hasMore } = useProfileFeed();
-        const { editPost, deletePost } = useEditDeletePost(setPosts);
+    const { editPost, deletePost } = useEditDeletePost(setPosts);
     const { user, authLoaded } = useAuth();
 
     useEffect(() => {
@@ -31,44 +28,41 @@ export default function Profile() {
         <>
             <div className={styles.profileContainer}>
                 <div className={styles.profile}>
-                    <h2>{profile.username}</h2>
-                    <p>{profile.email}</p>
-                    <p>{profile.roles.join(", ")}</p>
-                    <p>{profile.id}</p>
 
-                    <h3>Your posts</h3>
+                    {profile.profileImageUrl && (
+                        <img src={profile.profileImageUrl} alt="Profile picture" />
+                    )}
+                    <h2>{profile.username}</h2>
 
                     <button onClick={() => setScreen("createPost")}>Create Post</button>
-                </div>
-                <div>
-                    <ChangeUsernameForm />
-                    <ChangeEmailForm />
-                    <ChangePasswordForm />
+                    <button onClick={() => setScreen("editUser")}>Edit User</button>
                 </div>
 
-                {loadingPosts && page === 0 ? (
-                    <p>Loading posts... </p>
-                ) : posts.length === 0 ? (
-                    <p>No posts yet</p>
-                ) : (
-                <ul>
-                    {posts.map(post => (
-                        <PostItem
-                            key={post.id}
-                            post={post}
-                            onEdit={editPost}
-                            onDelete={deletePost}
-                        />
-                    ))}
+                <ul className={styles.profileFeedList}>
+                    {loadingPosts && page === 0 ? (
+                        <p>Loading Posts... </p>
+                    ) : posts.length === 0 ? (
+                        <p>No posts yet</p>
+                    ) : (
+                        <>
+                            {posts.map(post => (
+                                <PostItem
+                                    key={post.id}
+                                    post={post}
+                                    onEdit={editPost}
+                                    onDelete={deletePost}
+                                />
+                            ))}
+                        </>
+                    )}
                 </ul>
-                )}
-
                 {hasMore && !loadingPosts && (
                     <button onClick={() => fetchPosts(page + 1)}>Load more</button>
                 )}
 
                 {loadingPosts && page > 0 && <p>Loading more posts... </p>}
             </div>
+
         </>
     )
 }

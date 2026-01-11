@@ -61,6 +61,11 @@ public class BlogPostController {
         LogUtil.info(logger, "POST_DELETE_SUCCESS", null, "postId", postId);
     }
 
+    @GetMapping("/{postId}")
+    public ResponseEntity<BlogPostResponseDTO> getPost(@PathVariable UUID postId, Authentication authentication) {
+        return ResponseEntity.ok(blogPostService.getPostById(authentication, postId));
+    }
+
     @GetMapping
     public Page<BlogPostResponseDTO> getPosts(
             Authentication authentication,

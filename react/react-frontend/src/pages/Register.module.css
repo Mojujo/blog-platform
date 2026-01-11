@@ -1,13 +1,19 @@
 .registerContainer {
     display: flex;
-    align-items: center;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
 
-    margin-bottom: 10px;
+    grid-column: span 10;
+
+    margin-top: 1rem;
+
+    padding: 0;
 }
 
 .registerContainer input {
     margin: 5px 0 5px 0;
+    width: fit-content;
 }
 
 .registerContainer button {
@@ -17,4 +23,16 @@
     font-weight: bold;
 
     margin-top: 10px;
+}
+
+@media (max-width: 431px) {
+  .registerContainer {
+    grid-column: span 4;
+  }
+}
+
+@media (min-width: 1200px) {
+  .registerContainer {
+    grid-column: span 8;
+  }
 }

@@ -12,12 +12,13 @@ export default function Login() {
     const [message, setMessage] = useState("")
 
     const handleLogin = async () => {
-        const success = await login(username, password);
-
-        if (success) {
+        try {
+            await login(username, password);
             setMessage("Welcome");
-        } else {
-            setMessage("Login failed");
+            setScreen("home");
+        } catch (err: any) {
+            const errorMsg = err.response?.data?.message || "Login failed"
+            setMessage(errorMsg);
         }
     };
 
@@ -33,20 +34,24 @@ export default function Login() {
                 />
                 <input
                     id="password"
+                    type="password"
                     placeholder="Password"
                     value={password}
                     onChange={(string) => setPassword(string.target.value)}
                 />
-                <button onClick={async () => {
+                <button className={styles.loginButton} 
+                onClick={async () => {
                     await handleLogin();
-                    setScreen("home");
                 }}>Login</button>
                 <p>{message}</p>
+
+                <div className={styles.forwardRegister}>
+                    <h3>No account?</h3>
+                    <button className={styles.registerButton}
+                    onClick={() => setScreen("register")}>Register</button>
+                </div>
             </div>
-            <div className={styles.forwardRegister}>
-                <h3>No account?</h3>
-                <button onClick={() => setScreen("register")}>Register</button>
-            </div>
+
         </>
     )
 }

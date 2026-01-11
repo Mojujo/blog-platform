@@ -169,6 +169,23 @@ public class BlogPostService {
         LogUtil.info(logger, "BLOG_DELETE_SUCCESS", null, "postId", postId, "userId", user.getUserId());
     }
 
+    public BlogPostResponseDTO getPostById(Authentication authentication, UUID postId) {
+
+        AuthenticatedUserDetails user = (AuthenticatedUserDetails) authentication.getPrincipal();
+
+        BlogPost post = blogPostRepository.findById(postId)
+                .orElseThrow(() -> {
+                    LogUtil.warn(logger,
+                            "BLOG_GET_NOT_FOUND",
+                            "Blog post not found",
+                            "postId", postId, "userId", user.getUserId());
+
+                    return new BlogPostNotFoundException(postId);
+                });
+
+        return blogPostMapper.toResponse(post, user.getUserId());
+    }
+
     public Page<BlogPostResponseDTO> getAllPostsOrdered(Authentication authentication, int page, int size) {
 
         AuthenticatedUserDetails user = (AuthenticatedUserDetails) authentication.getPrincipal();

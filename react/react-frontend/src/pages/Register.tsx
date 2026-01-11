@@ -15,12 +15,13 @@ export default function Register() {
 
     const handleRegister = async () => {
 
-        const success = await register(username, email, password)
+        setMessage("");
+        const {success, error} = await register(username, email, password)
 
         if (success) {
             setScreen("login")
         } else {
-            setMessage("Registration Failed")
+            setMessage(error ?? "An unkown error occured")
         }
     };
 
@@ -42,6 +43,7 @@ export default function Register() {
                 />
                 <input
                     id="password"
+                    type="password"
                     placeholder="Password"
                     value={password}
                     onChange={string => setPassword(string.target.value)}

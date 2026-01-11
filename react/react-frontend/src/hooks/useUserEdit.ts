@@ -30,6 +30,28 @@ export const useUserEdit = () => {
         }
     };
 
+    const postFile = async (url: string, file: File) => {
+        setStatus("loading");
+        setError(null);
+
+        try {
+
+            const formData = new FormData();
+            formData.append("file", file);
+
+            await apiClient.post(url, formData, {
+                headers: { "Content-Type": "multipart/form-data" }
+            });
+
+            setStatus("success");
+            return true;
+        } catch (err: any) {
+            setStatus("error");
+            setError(err?.response?.data?.detail ?? "Error uploading file");
+            return false;
+        }
+    };
+
     return {
         status,
         error,
@@ -38,6 +60,8 @@ export const useUserEdit = () => {
         changeEmail: (newEmail: string) =>
             patch("/user/email", { newEmail }),
         changePassword: (oldPassword: string, newPassword: string) =>
-            patch("/user/password", { oldPassword, newPassword })
-    }
+            patch("/user/password", { oldPassword, newPassword }),
+        changeProfilePicture: (file: File) => 
+            postFile("/user/profile-picture", file)
+    };
 }

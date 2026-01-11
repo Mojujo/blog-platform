@@ -32,6 +32,7 @@ public class CustomUserMapper {
                 customUser.getId(),
                 customUser.getUsername(),
                 customUser.getEmail(),
+                customUser.getProfileImageUrl() != null ? customUser.getProfileImageUrl() : "",
                 roles
         );
     }

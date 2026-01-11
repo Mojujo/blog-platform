@@ -4,12 +4,15 @@ import './index.css'
 import App from './App.tsx'
 import { AuthProvider } from './context/AuthContext.tsx'
 import { ScreenProvider } from './context/ScreenContext.tsx'
+import { BookmarkProvider } from './context/BookmarkContext.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <AuthProvider>
       <ScreenProvider>
-        <App />
+        <BookmarkProvider>
+          <App />
+        </BookmarkProvider>
       </ScreenProvider>
     </AuthProvider>
   </StrictMode>,

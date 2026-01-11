@@ -9,29 +9,25 @@ export default function Home() {
 
     return (
         <>
-            <div className={styles.feedContainer}>
-                <h1>Recent Posts</h1>
-
+            <ul className={styles.feedList}>
                 {posts.length === 0 && !loading && <p>No posts yet</p>}
 
-                <ul>
-                    {posts.map(post => (
-                        <PostItem
-                            key={post.id}
-                            post={post}
-                            onEdit={editPost}
-                            onDelete={deletePost}
-                            showAuthor={true}
-                        />
-                    ))}
-                </ul>
-
                 {loading && <p>Loading... </p>}
+
+                {posts.map(post => (
+                    <PostItem
+                        key={post.id}
+                        post={post}
+                        onEdit={editPost}
+                        onDelete={deletePost}
+                        showAuthor={true}
+                    />
+                ))}
 
                 {hasMore && !loading && (
                     <button onClick={() => fetchPosts(page + 1)}>Load more</button>
                 )}
-            </div>
+            </ul>
         </>
     )
 }

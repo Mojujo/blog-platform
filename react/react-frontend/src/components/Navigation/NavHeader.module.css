@@ -1,11 +1,13 @@
 .centerHeader {
-
     display: flex;
+    grid-column-start: 1;
+    grid-column-end: var(--grid-column-end);
+
     align-items: center;
     flex-wrap: wrap;
-    width: 100%;
+
     padding: 0;
-    
+
 }
 
 .navContainer {
