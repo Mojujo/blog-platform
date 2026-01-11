@@ -1,5 +1,5 @@
 # Blog Platform Microservice
-A basic **REST:ful** **Blog-platform Microservice** built with **Spring Boot, PostgreSQL, React Native, RabbitMQ and Docker**. <br />
+A basic **REST:ful** **Blog-platform Microservice** built with **Spring Boot, PostgreSQL, React, RabbitMQ and Docker**. <br />
 The project demonstrates clean microservice architecture using **DTOs, DAOs, Mappers, input validation and JWT-based authentication with Spring Security**. <br />
 The microservice communicates through an API-Gateway to ensure optimal security and allows users to send requests between services using REST:ful methods and controllers. <br />
 
